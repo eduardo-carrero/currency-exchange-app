@@ -19,6 +19,7 @@ class ViewController: UITableViewController {
     private static let DESCRIPTIONS_URL = "https://currencylayer.com/site_downloads/cl-currencies-table.txt"
     
     var container: NSPersistentContainer!
+    var quotePredicate: NSPredicate?
     var quotes = [Quote]()
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
@@ -29,6 +30,8 @@ class ViewController: UITableViewController {
         container = NSPersistentContainer(name: "CurrenciesApp")
 
         container.loadPersistentStores { storeDescription, error in
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
             if let error = error {
                 print("Unresolved error \(error)")
             }
@@ -71,6 +74,8 @@ class ViewController: UITableViewController {
         let request = Quote.createFetchRequest()
         let sort = NSSortDescriptor(key: "name", ascending: true)
         request.sortDescriptors = [sort]
+//        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
+        request.predicate = quotePredicate
 
         do {
             quotes = try container.viewContext.fetch(request)
