@@ -4,6 +4,9 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String" minValueString="3" maxValueString="3"/>
         <attribute name="usdValue" attributeType="Double" defaultValueString="1" usesScalarValueType="YES"/>
+        <fetchIndex name="byNameIndex">
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+        </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="name"/>

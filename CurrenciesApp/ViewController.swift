@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 import SwiftyJSON
 
-class ViewController: UITableViewController {
+class ViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
     // essential URL structure is built using constants
     private static let ACCESS_KEY = "6b9f351735d27814f015763945c807f6"
@@ -20,7 +20,7 @@ class ViewController: UITableViewController {
     
     var container: NSPersistentContainer!
     var quotePredicate: NSPredicate?
-    var quotes = [Quote]()
+    var fetchedResultsController: NSFetchedResultsController<Quote>!
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
 
@@ -43,21 +43,34 @@ class ViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return quotes.count
+        let sectionInfo = fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath)
 
-        let quote = quotes[indexPath.row]
+        let quote = fetchedResultsController.object(at: indexPath)
         cell.textLabel!.text = quote.name
         cell.detailTextLabel!.text = quote.usdValue.description + " - " + quote.date.description
 
         return cell
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+            
+            //TODO: see if I should do more cases here.
+
+        default:
+            break
+        }
     }
     
     func saveContext() {
@@ -71,15 +84,21 @@ class ViewController: UITableViewController {
     }
     
     func loadSavedData() {
-        let request = Quote.createFetchRequest()
-        let sort = NSSortDescriptor(key: "name", ascending: true)
-        request.sortDescriptors = [sort]
+        if fetchedResultsController == nil {
+            let request = Quote.createFetchRequest()
+            let sort = NSSortDescriptor(key: "name", ascending: true)
+            request.sortDescriptors = [sort]
+            request.fetchBatchSize = 20
+
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedResultsController.delegate = self
+        }
+        
 //        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
-        request.predicate = quotePredicate
+        fetchedResultsController.fetchRequest.predicate = quotePredicate
 
         do {
-            quotes = try container.viewContext.fetch(request)
-            print("Got \(quotes.count) quotes")
+            try fetchedResultsController.performFetch()
             tableView.reloadData()
         } catch {
             print("Fetch failed")
