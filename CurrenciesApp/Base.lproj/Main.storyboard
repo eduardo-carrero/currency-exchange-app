@@ -4,14 +4,15 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--CurrenciesTVC-->
         <scene sceneID="dFK-dj-o66">
             <objects>
-                <tableViewController id="5YU-P3-eLo" customClass="ViewController" customModule="CurrenciesApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="5YU-P3-eLo" customClass="CurrenciesTVC" customModule="CurrenciesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="7vj-Cr-fVK">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -51,7 +52,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="onA-bi-vh8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="944.92753623188412" y="104.46428571428571"/>
+            <point key="canvasLocation" x="2270" y="104"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bRk-c8-DLX">
@@ -64,12 +65,38 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="5YU-P3-eLo" kind="relationship" relationship="rootViewController" id="Eh9-u5-ltI"/>
+                        <segue destination="8F4-AS-uff" kind="relationship" relationship="rootViewController" id="7IU-gQ-qXw"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nis-RW-Tqg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="34.782608695652179" y="104.46428571428571"/>
+        </scene>
+        <!--AmountVC-->
+        <scene sceneID="fcZ-79-Q3V">
+            <objects>
+                <viewController id="8F4-AS-uff" customClass="AmountVC" customModule="CurrenciesApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Fpv-Hg-kMw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DMa-8d-9Fd">
+                                <rect key="frame" x="143" y="414" width="129" height="69"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <segue destination="5YU-P3-eLo" kind="show" id="Ot2-go-HPB"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="pYC-2B-ffG"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7xG-ta-fPU"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XbW-mj-tJ3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1142.0289855072465" y="103.79464285714285"/>
         </scene>
     </scenes>
     <resources>

@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 import SwiftyJSON
 
-class ViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
     
     // essential URL structure is built using constants
     private static let ACCESS_KEY = "6b9f351735d27814f015763945c807f6"
@@ -42,37 +42,40 @@ class ViewController: UITableViewController, NSFetchedResultsControllerDelegate 
         loadSavedData()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return fetchedResultsController.sections?.count ?? 0
-    }
+    
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedResultsController.sections![section]
-        print("sectionInfo.numberOfObjects: \(sectionInfo.numberOfObjects)")
-        return sectionInfo.numberOfObjects
-    }
+    // MARK: - Navigation
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath)
-
-        let quote = fetchedResultsController.object(at: indexPath)
-        cell.textLabel!.text = quote.name
-        cell.detailTextLabel!.text = quote.usdValue.description + " - " + quote.date.description
-
-        return cell
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        if let currenciesTvc = segue.destination as? CurrenciesTVC {
+            currenciesTvc.fetchedResultsController = fetchedResultsController
+            
+            // TODO: title, anything else
+        }
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-//        switch type {
-//        case .delete:
-//            tableView.deleteRows(at: [indexPath!], with: .automatic)
+//    override func numberOfSections(in tableView: UITableView) -> Int {
+//        return fetchedResultsController.sections?.count ?? 0
+//    }
 //
-//            //TODO: see if I should do more cases here.
+//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        let sectionInfo = fetchedResultsController.sections![section]
+//        print("sectionInfo.numberOfObjects: \(sectionInfo.numberOfObjects)")
+//        return sectionInfo.numberOfObjects
+//    }
 //
-//        default:
-//            break
-//        }
-    }
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath)
+//
+//        let quote = fetchedResultsController.object(at: indexPath)
+//        cell.textLabel!.text = quote.name
+//        cell.detailTextLabel!.text = quote.usdValue.description + " - " + quote.date.description
+//
+//        return cell
+//    }
     
     func saveContext() {
         if container.viewContext.hasChanges {
@@ -100,7 +103,7 @@ class ViewController: UITableViewController, NSFetchedResultsControllerDelegate 
 
         do {
             try fetchedResultsController.performFetch()
-            tableView.reloadData()
+//            tableView.reloadData()
         } catch {
             print("Fetch failed")
         }

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E14570FF26B0173C00B56351 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14570FE26B0173C00B56351 /* AppDelegate.swift */; };
 		E145710126B0173C00B56351 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145710026B0173C00B56351 /* SceneDelegate.swift */; };
-		E145710326B0173C00B56351 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145710226B0173C00B56351 /* ViewController.swift */; };
+		E145710326B0173C00B56351 /* AmountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145710226B0173C00B56351 /* AmountVC.swift */; };
 		E145710626B0173C00B56351 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E145710426B0173C00B56351 /* Main.storyboard */; };
 		E145710926B0173C00B56351 /* CurrenciesApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E145710726B0173C00B56351 /* CurrenciesApp.xcdatamodeld */; };
 		E145710B26B0173E00B56351 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E145710A26B0173E00B56351 /* Assets.xcassets */; };
@@ -19,6 +19,7 @@
 		E145713326B04D5800B56351 /* Quote+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713126B04D5800B56351 /* Quote+CoreDataClass.swift */; };
 		E145713426B04D5800B56351 /* Quote+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */; };
 		E145713726B0528B00B56351 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = E145713626B0528B00B56351 /* SwiftyJSON */; };
+		E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713826B1645000B56351 /* CurrenciesTVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +43,7 @@
 		E14570FB26B0173C00B56351 /* CurrenciesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrenciesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E14570FE26B0173C00B56351 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E145710026B0173C00B56351 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E145710226B0173C00B56351 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E145710226B0173C00B56351 /* AmountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountVC.swift; sourceTree = "<group>"; };
 		E145710526B0173C00B56351 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E145710826B0173C00B56351 /* CurrenciesApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CurrenciesApp.xcdatamodel; sourceTree = "<group>"; };
 		E145710A26B0173E00B56351 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		E145712526B0173F00B56351 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E145713126B04D5800B56351 /* Quote+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Quote+CoreDataClass.swift"; sourceTree = "<group>"; };
 		E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Quote+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E145713826B1645000B56351 /* CurrenciesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +113,8 @@
 				E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */,
 				E14570FE26B0173C00B56351 /* AppDelegate.swift */,
 				E145710026B0173C00B56351 /* SceneDelegate.swift */,
-				E145710226B0173C00B56351 /* ViewController.swift */,
+				E145710226B0173C00B56351 /* AmountVC.swift */,
+				E145713826B1645000B56351 /* CurrenciesTVC.swift */,
 				E145710426B0173C00B56351 /* Main.storyboard */,
 				E145710A26B0173E00B56351 /* Assets.xcassets */,
 				E145710C26B0173E00B56351 /* LaunchScreen.storyboard */,
@@ -276,7 +279,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E145713426B04D5800B56351 /* Quote+CoreDataProperties.swift in Sources */,
-				E145710326B0173C00B56351 /* ViewController.swift in Sources */,
+				E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */,
+				E145710326B0173C00B56351 /* AmountVC.swift in Sources */,
 				E145713326B04D5800B56351 /* Quote+CoreDataClass.swift in Sources */,
 				E14570FF26B0173C00B56351 /* AppDelegate.swift in Sources */,
 				E145710926B0173C00B56351 /* CurrenciesApp.xcdatamodeld in Sources */,
