@@ -48,6 +48,7 @@ class ViewController: UITableViewController, NSFetchedResultsControllerDelegate 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section]
+        print("sectionInfo.numberOfObjects: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
 
@@ -62,15 +63,15 @@ class ViewController: UITableViewController, NSFetchedResultsControllerDelegate 
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
-            
-            //TODO: see if I should do more cases here.
-
-        default:
-            break
-        }
+//        switch type {
+//        case .delete:
+//            tableView.deleteRows(at: [indexPath!], with: .automatic)
+//
+//            //TODO: see if I should do more cases here.
+//
+//        default:
+//            break
+//        }
     }
     
     func saveContext() {
