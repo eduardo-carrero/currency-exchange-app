@@ -10,6 +10,7 @@ import CoreData
 
 class CurrenciesTVC: UITableViewController {
     
+//    var quote: Quote!
     var quotePredicate: NSPredicate?
     var fetchedResultsController: NSFetchedResultsController<Quote>!
 

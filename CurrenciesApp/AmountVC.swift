@@ -52,7 +52,6 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         // Pass the selected object to the new view controller.
         if let currenciesTvc = segue.destination as? CurrenciesTVC {
             currenciesTvc.fetchedResultsController = fetchedResultsController
-            
             // TODO: title, anything else
         }
     }
@@ -87,6 +86,26 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         }
     }
     
+    func getUSDQuote() -> Quote {
+
+        let predicate = Quote.createFetchRequest()
+//        let sort = NSSortDescriptor(key: "date", ascending: false)
+//        newest.sortDescriptors = [sort]
+        quotePredicate = NSPredicate(format: "name == 'USD'")
+        predicate.fetchLimit = 1
+
+        if let quotes = try? container.viewContext.fetch(predicate) {
+            if quotes.count > 0 {
+                return quotes[0]
+            }
+        }
+        let quote = Quote(context: container.viewContext)
+        quote.configure(withName: "USD", date: Date(), usdValue: 1)
+        saveContext()
+
+        return quote
+    }
+    
     func loadSavedData() {
         if fetchedResultsController == nil {
             let request = Quote.createFetchRequest()
@@ -99,6 +118,7 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         }
         
 //        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
+//        quotePredicate = NSPredicate(format: "name == 'EUR'")
         fetchedResultsController.fetchRequest.predicate = quotePredicate
 
         do {
