@@ -84,19 +84,22 @@
                                 <rect key="frame" x="41.5" y="350" width="331" height="250"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vpl-K8-mRa" userLabel="Lower Currency View">
-                                        <rect key="frame" x="0.0" y="200" width="331" height="50"/>
+                                        <rect key="frame" x="0.0" y="155" width="331" height="40"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H50-y3-jxd" userLabel="Lower Currency Label">
-                                                <rect key="frame" x="43" y="15" width="42" height="20"/>
+                                                <rect key="frame" x="33" y="10" width="258" height="20"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="oGx-Is-ADe" userLabel="Lower Currency Chevron">
-                                                <rect key="frame" x="100" y="20" width="216" height="10.5"/>
+                                                <rect key="frame" x="301" y="15" width="20" height="10.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="oGx-Is-ADe" secondAttribute="height" id="4Pe-eU-rea"/>
+                                                </constraints>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QHh-01-pPi" userLabel="Lower Currency Image View">
-                                                <rect key="frame" x="15" y="15" width="13" height="20"/>
+                                                <rect key="frame" x="10" y="10" width="13" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="QHh-01-pPi" secondAttribute="height" multiplier="2:3" id="2oE-ce-ahz"/>
                                                 </constraints>
@@ -105,37 +108,43 @@
                                         <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <gestureRecognizers/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="QHh-01-pPi" secondAttribute="bottom" constant="15" id="2LW-lQ-LJt"/>
-                                            <constraint firstAttribute="bottom" secondItem="H50-y3-jxd" secondAttribute="bottom" constant="15" id="DBl-Rc-AM6"/>
-                                            <constraint firstItem="H50-y3-jxd" firstAttribute="leading" secondItem="QHh-01-pPi" secondAttribute="trailing" constant="15" id="Ifq-Aa-3lt"/>
-                                            <constraint firstAttribute="bottom" secondItem="oGx-Is-ADe" secondAttribute="bottom" constant="15" id="PCz-eZ-7gF"/>
-                                            <constraint firstItem="QHh-01-pPi" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="15" id="Q5N-ao-pcR"/>
-                                            <constraint firstAttribute="trailing" secondItem="oGx-Is-ADe" secondAttribute="trailing" constant="15" id="X4V-Hk-wyz"/>
-                                            <constraint firstItem="H50-y3-jxd" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="15" id="eNA-UV-SH4"/>
-                                            <constraint firstItem="oGx-Is-ADe" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="15" id="loV-Mk-eyc"/>
-                                            <constraint firstAttribute="height" constant="50" id="p3Y-m7-zVj"/>
-                                            <constraint firstItem="QHh-01-pPi" firstAttribute="leading" secondItem="Vpl-K8-mRa" secondAttribute="leading" constant="15" id="tFg-3V-WSM"/>
-                                            <constraint firstItem="oGx-Is-ADe" firstAttribute="leading" secondItem="H50-y3-jxd" secondAttribute="trailing" constant="15" id="vIh-3j-Y5A"/>
+                                            <constraint firstAttribute="bottom" secondItem="QHh-01-pPi" secondAttribute="bottom" constant="10" id="2LW-lQ-LJt"/>
+                                            <constraint firstAttribute="bottom" secondItem="H50-y3-jxd" secondAttribute="bottom" constant="10" id="DBl-Rc-AM6"/>
+                                            <constraint firstItem="H50-y3-jxd" firstAttribute="leading" secondItem="QHh-01-pPi" secondAttribute="trailing" constant="10" id="Ifq-Aa-3lt"/>
+                                            <constraint firstAttribute="bottom" secondItem="oGx-Is-ADe" secondAttribute="bottom" constant="10" id="PCz-eZ-7gF"/>
+                                            <constraint firstItem="QHh-01-pPi" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="10" id="Q5N-ao-pcR"/>
+                                            <constraint firstAttribute="trailing" secondItem="oGx-Is-ADe" secondAttribute="trailing" constant="10" id="X4V-Hk-wyz"/>
+                                            <constraint firstItem="H50-y3-jxd" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="10" id="eNA-UV-SH4"/>
+                                            <constraint firstItem="oGx-Is-ADe" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="top" constant="10" id="loV-Mk-eyc"/>
+                                            <constraint firstAttribute="height" constant="40" id="p3Y-m7-zVj"/>
+                                            <constraint firstItem="QHh-01-pPi" firstAttribute="leading" secondItem="Vpl-K8-mRa" secondAttribute="leading" constant="10" id="tFg-3V-WSM"/>
+                                            <constraint firstItem="oGx-Is-ADe" firstAttribute="leading" secondItem="H50-y3-jxd" secondAttribute="trailing" constant="10" id="vIh-3j-Y5A"/>
                                         </constraints>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="yiT-Ko-QFL" appends="YES" id="bxz-Ke-l9G"/>
                                         </connections>
                                     </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bvS-vk-r5W" userLabel="Lower Currency Text Field">
+                                        <rect key="frame" x="0.0" y="210" width="331" height="40"/>
+                                        <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Xcl-Sn-wA1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="250" id="Isu-0L-Fm8"/>
+                                    <constraint firstItem="bvS-vk-r5W" firstAttribute="width" secondItem="8CL-fa-4at" secondAttribute="width" id="Mmq-ii-Zrq"/>
+                                    <constraint firstAttribute="bottom" secondItem="bvS-vk-r5W" secondAttribute="bottom" id="Ola-1l-oEn"/>
+                                    <constraint firstItem="bvS-vk-r5W" firstAttribute="centerX" secondItem="8CL-fa-4at" secondAttribute="centerX" id="V7y-Ky-IHy"/>
                                     <constraint firstItem="Vpl-K8-mRa" firstAttribute="centerX" secondItem="8CL-fa-4at" secondAttribute="centerX" id="cso-UM-3m2"/>
-                                    <constraint firstAttribute="bottom" secondItem="Vpl-K8-mRa" secondAttribute="bottom" id="kB9-yv-KpA"/>
+                                    <constraint firstItem="bvS-vk-r5W" firstAttribute="top" secondItem="Vpl-K8-mRa" secondAttribute="bottom" constant="15" id="kB9-yv-KpA"/>
                                     <constraint firstItem="Vpl-K8-mRa" firstAttribute="width" secondItem="8CL-fa-4at" secondAttribute="width" id="tAG-NI-FPy"/>
                                 </constraints>
                             </view>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bvS-vk-r5W" userLabel="Lower Currency Text Field">
-                                <rect key="frame" x="158" y="431" width="97" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pYC-2B-ffG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -167,6 +176,9 @@
         <image name="chevron.down" catalog="system" width="128" height="72"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
