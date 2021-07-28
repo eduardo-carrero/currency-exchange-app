@@ -24,6 +24,10 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
 
+    @IBAction func lowerCurrencyTapped(_ sender: UITapGestureRecognizer) {
+        print("\(#function)")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
