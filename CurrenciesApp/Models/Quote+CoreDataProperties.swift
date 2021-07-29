@@ -19,6 +19,7 @@ extension Quote {
     @NSManaged public var name: String
     @NSManaged public var usdValue: Double
     @NSManaged public var date: Date
+    @NSManaged public var currencyDescription: String
 
 }
 

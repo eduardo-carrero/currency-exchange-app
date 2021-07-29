@@ -42,7 +42,7 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
 
         let quote = fetchedResultsController.object(at: indexPath)
         cell?.textLabel?.text = quote.name
-        cell?.detailTextLabel?.text = quote.usdValue.description + " - " + quote.date.description
+        cell?.detailTextLabel?.text = quote.currencyDescription
         
         return cell!
     }

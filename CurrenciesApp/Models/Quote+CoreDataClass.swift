@@ -16,9 +16,10 @@ public class Quote: NSManagedObject {
         let first = name[...startIndex]
         return String(first)
     }
-    func configure(withName name: String, date: Date, usdValue: Double) {
+    func configure(withName name: String, date: Date, usdValue: Double, description: String) {
         self.name = name
         self.date = date
         self.usdValue = usdValue
+        self.currencyDescription = description
     }
 }

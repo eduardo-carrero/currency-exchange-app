@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20F71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Quote" representedClassName="Quote" syncable="YES">
+        <attribute name="currencyDescription" attributeType="String"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String" minValueString="3" maxValueString="3"/>
         <attribute name="usdValue" attributeType="Double" defaultValueString="1" usesScalarValueType="YES"/>
@@ -14,6 +15,6 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Quote" positionX="-45" positionY="0" width="128" height="74"/>
+        <element name="Quote" positionX="-45" positionY="0" width="128" height="89"/>
     </elements>
 </model>

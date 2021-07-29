@@ -59,7 +59,6 @@ class AmountVC: UIViewController {
             }
         }
         
-        performSelector(inBackground: #selector(fetchQuotes), with: nil)
         performSelector(inBackground: #selector(fetchDescriptions), with: nil)
         
 //        loadSavedData()
@@ -111,7 +110,7 @@ class AmountVC: UIViewController {
             }
         }
         let quote = Quote(context: container.viewContext)
-        quote.configure(withName: "USD", date: Date(), usdValue: 1)
+        quote.configure(withName: "USD", date: Date(), usdValue: 1, description: "United States Dollar")
         saveContext()
 
         return quote
@@ -124,50 +123,53 @@ class AmountVC: UIViewController {
         
         if let html = try? String(contentsOf: url) {
             if let doc = try? HTML(html: html, encoding: .utf8) {
+                var descriptionsDict: [String: String] = [:]
                 for tr in doc.css("tr") {
                     let tds = tr.css("td")
-                    if tds.count == 2 {
-                        let key = tds.first?.text ?? ""
-                        let value = tds[1].text ?? ""
-                        print("key: \(key)")
-                        print("value: \(value)")
+                    if tds.count == 2,
+                       let key = tds.first?.text {
+                        descriptionsDict[key] = tds[1].text ?? ""
                     }
                 }
-            }
-        }
-    }
-    
-    @objc func fetchQuotes() {
-        guard let url = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
-            fatalError("\(#function); could not create url.")
-        }
-        
-        if let data = try? String(contentsOf: url) {
-            // give the data to SwiftyJSON to parse
-            let json = JSON(parseJSON: data)
-
-            // read the quotes back out
-            let jsonQuoteDict = json["quotes"].dictionaryValue
-            let success = json["success"].boolValue
-
-            print("Received \(jsonQuoteDict.count) new quotes.")
-
-            DispatchQueue.main.async { [unowned self] in
-                for (key, value) in jsonQuoteDict {
-                    let quote = Quote(context: self.container.viewContext)
-                    self.configure(quote: quote, usingKey: key, value: value, timeStamp: json["timestamp"])
+                print("descriptionsDict: \(descriptionsDict)")
+                
+                
+                
+                guard let url2 = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
+                    fatalError("\(#function); could not create url.")
                 }
 
-                self.saveContext()
-//                self.loadSavedData()
+                if let data = try? String(contentsOf: url2) {
+                    // give the data to SwiftyJSON to parse
+                    let json = JSON(parseJSON: data)
+
+                    // read the quotes back out
+                    let jsonQuoteDict = json["quotes"].dictionaryValue
+                    let success = json["success"].boolValue
+
+                    print("Received \(jsonQuoteDict.count) new quotes.")
+
+                    DispatchQueue.main.async { [unowned self] in
+                        for (key, value) in jsonQuoteDict {
+                            let quote = Quote(context: self.container.viewContext)
+                            let name = String(key.suffix(3))
+                            self.configure(quote: quote, usingName: name, value: value, timeStamp: json["timestamp"], description: descriptionsDict[name] ?? "")
+                        }
+
+                        self.saveContext()
+                        //                self.loadSavedData()
+                    }
+                }
+                
             }
         }
     }
     
-    func configure(quote: Quote, usingKey key: String, value: JSON, timeStamp: JSON) {
-        quote.name = String(key.suffix(3))
+    func configure(quote: Quote, usingName name: String, value: JSON, timeStamp: JSON, description: String) {
+        quote.name = name
         quote.usdValue = value.doubleValue
         quote.date = Date(timeIntervalSince1970: TimeInterval(timeStamp.doubleValue))
+        quote.currencyDescription = description
     }
 }
 
