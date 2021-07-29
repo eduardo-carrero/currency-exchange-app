@@ -11,6 +11,11 @@ import CoreData
 
 @objc(Quote)
 public class Quote: NSManagedObject {
+    @objc func nameFirstCharacter() -> String {
+        let startIndex = name.startIndex
+        let first = name[...startIndex]
+        return String(first)
+    }
     func configure(withName name: String, date: Date, usdValue: Double) {
         self.name = name
         self.date = date

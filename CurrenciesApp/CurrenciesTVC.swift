@@ -53,6 +53,13 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let name = fetchedResultsController.sections?[section].name {
+            return name
+        }
+        return ""
+    }
+    
     func loadSavedData() {
         if fetchedResultsController == nil {
             let request = Quote.createFetchRequest()
@@ -61,7 +68,7 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
             request.fetchBatchSize = 20
 
             let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: "nameFirstCharacter", cacheName: nil)
             fetchedResultsController.delegate = self
         }
         
