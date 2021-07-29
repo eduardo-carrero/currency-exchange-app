@@ -24,6 +24,18 @@ class AmountVC: UIViewController {
     private static let ENDPOINT = "live"
     private static let DESCRIPTIONS_URL = "https://currencylayer.com/site_downloads/cl-currencies-table.txt"
     
+//    var usdAmount: Double = 0.0
+    lazy var formatter: NumberFormatter = {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .decimal
+        // localize to your grouping and decimal separator
+        currencyFormatter.locale = Locale.current
+        currencyFormatter.minimumFractionDigits = 2
+        currencyFormatter.maximumFractionDigits = 2
+        return currencyFormatter
+    }()
+    
     var container: NSPersistentContainer!
     var quotePredicate: NSPredicate?
     var fetchedResultsController: NSFetchedResultsController<Quote>!
@@ -32,8 +44,17 @@ class AmountVC: UIViewController {
     
     var selectCurrencyAction: ((AmountField) -> Void)?
 
+    var upperQuote: Quote?
+    var lowerQuote: Quote?
+    
     @IBOutlet weak var upperTextField: UITextField!
     @IBOutlet weak var lowerTextField: UITextField!
+    @IBOutlet weak var upperNameLabel: UILabel!
+    @IBOutlet weak var lowerNameLabel: UILabel!
+    @IBOutlet weak var upperDescriptionLabel: UILabel!
+    @IBOutlet weak var lowerDescriptionLabel: UILabel!
+    @IBOutlet weak var upperImageView: UIImageView!
+    @IBOutlet weak var lowerImageView: UIImageView!
     
     @IBAction func upperCurrencyTapped(_ sender: UITapGestureRecognizer) {
         print("\(#function)")
@@ -59,6 +80,9 @@ class AmountVC: UIViewController {
             }
         }
         
+        changeCurrency(inField: .upper, toQuote: getUSDQuote())
+        changeCurrency(inField: .lower, toQuote: getUSDQuote())
+        
         performSelector(inBackground: #selector(fetchDescriptions), with: nil)
         
 //        loadSavedData()
@@ -68,10 +92,24 @@ class AmountVC: UIViewController {
         //TODO
     }
     
-    func changeCurrency(inField field: AmountField, toQuote quote: Quote) {
-        print("\(#function); quote: \(quote)")
+    func changeCurrency(inField field: AmountField, toQuote newQuote: Quote) {
         let textField = field == .upper ? upperTextField : lowerTextField
-        //TODO: test
+        let oldQuote = field == .upper ? upperQuote : lowerQuote
+        let multiplier = newQuote.usdValue / (oldQuote?.usdValue ?? 1.0)
+        var amount = textField?.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
+        amount = amount * multiplier
+        textField?.text = formatter.string(from: NSNumber(value: amount))
+        if field == .upper {
+            upperQuote = newQuote
+            upperImageView.image = UIImage(named: newQuote.name.lowercased())
+            upperNameLabel.text = newQuote.name
+            upperDescriptionLabel.text = newQuote.currencyDescription
+        } else {
+            lowerQuote = newQuote
+            lowerImageView.image = UIImage(named: newQuote.name.lowercased())
+            lowerNameLabel.text = newQuote.name
+            lowerDescriptionLabel.text = newQuote.currencyDescription
+        }
     }
 
     // MARK: - Navigation
@@ -102,6 +140,7 @@ class AmountVC: UIViewController {
 //        let sort = NSSortDescriptor(key: "date", ascending: false)
 //        newest.sortDescriptors = [sort]
         quotePredicate = NSPredicate(format: "name == 'USD'")
+        predicate.predicate = quotePredicate
         predicate.fetchLimit = 1
 
         if let quotes = try? container.viewContext.fetch(predicate) {
@@ -199,28 +238,36 @@ extension AmountVC {
         return doneToolbar
     }
     
+//    @objc func doneButtonAction() {
+//        view.endEditing(true)
+//        self.validate(textField: upperTextField, withFormatter: formatter)
+//        self.validate(textField: lowerTextField, withFormatter: formatter)
+//    }
+    
     @objc func doneButtonAction() {
+//        let writtenField: AmountField = upperTextField.isFirstResponder ? .upper : .lower
+        guard let firstResponderTextField = upperTextField.isFirstResponder ? upperTextField : lowerTextField,
+              let conversionTextField = upperTextField.isFirstResponder ? lowerTextField : upperTextField else {
+            print("Didn't find text field.")
+            return
+        }
+        guard let firstResponderQuote = upperTextField.isFirstResponder ? upperQuote : lowerQuote,
+              let conversionQuote = upperTextField.isFirstResponder ? lowerQuote : upperQuote else {
+            print("Didn't find quote.")
+            return
+        }
         view.endEditing(true)
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.usesGroupingSeparator = true
-        currencyFormatter.numberStyle = .decimal
-        // localize to your grouping and decimal separator
-        currencyFormatter.locale = Locale.current
-        currencyFormatter.minimumFractionDigits = 2
-        currencyFormatter.maximumFractionDigits = 2
+        self.validate(textField: firstResponderTextField, withFormatter: formatter)
+        let amount = firstResponderTextField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
+        let newAmount = amount * firstResponderQuote.multiplierTo(quote: conversionQuote)
         
-        self.validate(textField: upperTextField, withFormatter: currencyFormatter)
-        self.validate(textField: lowerTextField, withFormatter: currencyFormatter)
+        conversionTextField.text = formatter.string(from: NSNumber(value: newAmount))
     }
     
     func validate(textField: UITextField, withFormatter formatter: NumberFormatter) {
-        if var text = textField.text {
-            text = text.replacingOccurrences(of: formatter.locale.groupingSeparator ?? "", with: "")
-            text = text.replacingOccurrences(of: formatter.locale.decimalSeparator ?? "", with: ".")
-            if let amount = Double(text) {
-                textField.text = formatter.string(from: NSNumber(value: amount))
-                return
-            }
+        if let amount = textField.text?.doubleWithFormatter(formatter: formatter) {
+            textField.text = formatter.string(from: NSNumber(value: amount))
+            return
         }
         textField.text = formatter.string(from: 0)
     }
