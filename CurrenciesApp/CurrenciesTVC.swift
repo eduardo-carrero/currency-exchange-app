@@ -8,20 +8,18 @@
 import UIKit
 import CoreData
 
-class CurrenciesTVC: UITableViewController {
+class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
     
 //    var quote: Quote!
     var quotePredicate: NSPredicate?
     var fetchedResultsController: NSFetchedResultsController<Quote>!
+    
+    var currencySelectedAction: ((Quote) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        loadSavedData()
     }
 
     // MARK: - Table view data source
@@ -37,13 +35,46 @@ class CurrenciesTVC: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath)
+        var cell = tableView.dequeueReusableCell(withIdentifier: "Quote")
+        if cell == nil {
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Quote")
+        }
 
         let quote = fetchedResultsController.object(at: indexPath)
-        cell.textLabel!.text = quote.name
-        cell.detailTextLabel!.text = quote.usdValue.description + " - " + quote.date.description
+        cell?.textLabel?.text = quote.name
+        cell?.detailTextLabel?.text = quote.usdValue.description + " - " + quote.date.description
+        
+        return cell!
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let quote = fetchedResultsController.object(at: indexPath)
+        currencySelectedAction?(quote)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func loadSavedData() {
+        if fetchedResultsController == nil {
+            let request = Quote.createFetchRequest()
+            let sort = NSSortDescriptor(key: "name", ascending: true)
+            request.sortDescriptors = [sort]
+            request.fetchBatchSize = 20
 
-        return cell
+            let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedResultsController.delegate = self
+        }
+        
+//        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
+//        quotePredicate = NSPredicate(format: "name == 'EUR'")
+        fetchedResultsController.fetchRequest.predicate = quotePredicate
+
+        do {
+            try fetchedResultsController.performFetch()
+//            tableView.reloadData()
+        } catch {
+            print("Fetch failed")
+        }
     }
 
     /*

@@ -10,7 +10,12 @@ import CoreData
 import SwiftyJSON
 import Kanna
 
-class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
+enum AmountField {
+    case upper
+    case lower
+}
+
+class AmountVC: UIViewController {
     
     // essential URL structure is built using constants
     private static let ACCESS_KEY = "6b9f351735d27814f015763945c807f6"
@@ -24,15 +29,19 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
     var fetchedResultsController: NSFetchedResultsController<Quote>!
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
+    
+    var selectCurrencyAction: ((AmountField) -> Void)?
 
     @IBOutlet weak var upperTextField: UITextField!
     @IBOutlet weak var lowerTextField: UITextField!
     
     @IBAction func upperCurrencyTapped(_ sender: UITapGestureRecognizer) {
         print("\(#function)")
+        selectCurrencyAction?(.upper)
     }
     @IBAction func lowerCurrencyTapped(_ sender: UITapGestureRecognizer) {
         print("\(#function)")
+        selectCurrencyAction?(.lower)
     }
     
     override func viewDidLoad() {
@@ -53,10 +62,18 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         performSelector(inBackground: #selector(fetchQuotes), with: nil)
         performSelector(inBackground: #selector(fetchDescriptions), with: nil)
         
-        loadSavedData()
+//        loadSavedData()
     }
     
+    func convertAmount(amount: Double, fromQuote: Quote, toQuote: Quote) {
+        //TODO
+    }
     
+    func changeCurrency(inField field: AmountField, toQuote quote: Quote) {
+        print("\(#function); quote: \(quote)")
+        let textField = field == .upper ? upperTextField : lowerTextField
+        //TODO: test
+    }
 
     // MARK: - Navigation
 
@@ -99,30 +116,6 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
 
         return quote
     }
-    
-    func loadSavedData() {
-        if fetchedResultsController == nil {
-            let request = Quote.createFetchRequest()
-            let sort = NSSortDescriptor(key: "name", ascending: true)
-            request.sortDescriptors = [sort]
-            request.fetchBatchSize = 20
-
-            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-            fetchedResultsController.delegate = self
-        }
-        
-//        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
-//        quotePredicate = NSPredicate(format: "name == 'EUR'")
-        fetchedResultsController.fetchRequest.predicate = quotePredicate
-
-        do {
-            try fetchedResultsController.performFetch()
-//            tableView.reloadData()
-        } catch {
-            print("Fetch failed")
-        }
-    }
-    
         
     @objc func fetchDescriptions() {
         guard let url = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt") else {
@@ -166,7 +159,7 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
                 }
 
                 self.saveContext()
-                self.loadSavedData()
+//                self.loadSavedData()
             }
         }
     }
