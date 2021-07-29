@@ -19,6 +19,8 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.register(UINib(nibName: "CurrencyCell", bundle: nil), forCellReuseIdentifier: "Quote")
+        
         loadSavedData()
     }
 
@@ -33,24 +35,16 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
         print("sectionInfo.numberOfObjects: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        50
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Quote")
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Quote")
-        }
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath) as! CurrencyCell
         let quote = fetchedResultsController.object(at: indexPath)
-        cell?.textLabel?.text = quote.name
-        cell?.detailTextLabel?.text = quote.currencyDescription
-        
-        var image = UIImage(named: quote.name.lowercased())
-        if image == nil {
-            image = UIImage(named: "ic-no-image")
-        }
-        cell?.imageView?.image = image
-        
-        return cell!
+        cell.configure(quote: quote)
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

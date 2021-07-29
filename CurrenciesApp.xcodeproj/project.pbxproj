@@ -22,6 +22,8 @@
 		E145713C26B1CFC400B56351 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */; };
 		E145713F26B2915800B56351 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = E145713E26B2915800B56351 /* Kanna */; };
 		E145714226B2A2C400B56351 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714126B2A2C400B56351 /* MainCoordinator.swift */; };
+		E145714B26B3423A00B56351 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714926B3423A00B56351 /* CurrencyCell.swift */; };
+		E145714C26B3423A00B56351 /* CurrencyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E145714A26B3423A00B56351 /* CurrencyCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		E145713826B1645000B56351 /* CurrenciesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesTVC.swift; sourceTree = "<group>"; };
 		E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Utils.swift"; sourceTree = "<group>"; };
 		E145714126B2A2C400B56351 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		E145714926B3423A00B56351 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		E145714A26B3423A00B56351 /* CurrencyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,8 @@
 				E145714126B2A2C400B56351 /* MainCoordinator.swift */,
 				E145710226B0173C00B56351 /* AmountVC.swift */,
 				E145713826B1645000B56351 /* CurrenciesTVC.swift */,
+				E145714926B3423A00B56351 /* CurrencyCell.swift */,
+				E145714A26B3423A00B56351 /* CurrencyCell.xib */,
 				E145710426B0173C00B56351 /* Main.storyboard */,
 				E145710A26B0173E00B56351 /* Assets.xcassets */,
 				E145710C26B0173E00B56351 /* LaunchScreen.storyboard */,
@@ -274,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E145714C26B3423A00B56351 /* CurrencyCell.xib in Resources */,
 				E145710E26B0173E00B56351 /* LaunchScreen.storyboard in Resources */,
 				E145710B26B0173E00B56351 /* Assets.xcassets in Resources */,
 				E145710626B0173C00B56351 /* Main.storyboard in Resources */,
@@ -301,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E145714B26B3423A00B56351 /* CurrencyCell.swift in Sources */,
 				E145713C26B1CFC400B56351 /* UIViewController+Utils.swift in Sources */,
 				E145713426B04D5800B56351 /* Quote+CoreDataProperties.swift in Sources */,
 				E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */,
