@@ -24,12 +24,20 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
 
+    @IBOutlet weak var upperTextField: UITextField!
+    @IBOutlet weak var lowerTextField: UITextField!
+    
+    @IBAction func upperCurrencyTapped(_ sender: UITapGestureRecognizer) {
+        print("\(#function)")
+    }
     @IBAction func lowerCurrencyTapped(_ sender: UITapGestureRecognizer) {
         print("\(#function)")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureKeyboard()
         
         container = NSPersistentContainer(name: "CurrenciesApp")
 
@@ -59,26 +67,6 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
             // TODO: title, anything else
         }
     }
-    
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        return fetchedResultsController.sections?.count ?? 0
-//    }
-//
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        let sectionInfo = fetchedResultsController.sections![section]
-//        print("sectionInfo.numberOfObjects: \(sectionInfo.numberOfObjects)")
-//        return sectionInfo.numberOfObjects
-//    }
-//
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "Quote", for: indexPath)
-//
-//        let quote = fetchedResultsController.object(at: indexPath)
-//        cell.textLabel!.text = quote.name
-//        cell.detailTextLabel!.text = quote.usdValue.description + " - " + quote.date.description
-//
-//        return cell
-//    }
     
     func saveContext() {
         if container.viewContext.hasChanges {
@@ -164,6 +152,65 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         quote.name = String(key.suffix(3))
         quote.usdValue = value.doubleValue
         quote.date = Date(timeIntervalSince1970: TimeInterval(timeStamp.doubleValue))
+    }
+}
+
+extension AmountVC {
+    func configureKeyboard() {
+        upperTextField.keyboardType = .numbersAndPunctuation
+        lowerTextField.keyboardType = .numbersAndPunctuation
+        addDoneButtonOnKeyboard()
+        hideKeyboardWhenTappedAround()
+    }
+    
+    func addDoneButtonOnKeyboard() {
+        upperTextField.inputAccessoryView = createDoneToolbar()
+        lowerTextField.inputAccessoryView = createDoneToolbar()
+    }
+    
+    func createDoneToolbar() -> UIToolbar {
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        doneToolbar.barStyle = .default
+
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonAction))
+
+        let items = [flexSpace, done]
+        doneToolbar.items = items
+        doneToolbar.sizeToFit()
+        return doneToolbar
+    }
+    
+    @objc func doneButtonAction() {
+        view.endEditing(true)
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .decimal
+        // localize to your grouping and decimal separator
+        currencyFormatter.locale = Locale.current
+        currencyFormatter.minimumFractionDigits = 2
+        currencyFormatter.maximumFractionDigits = 2
+        
+        self.validate(textField: upperTextField, withFormatter: currencyFormatter)
+        self.validate(textField: lowerTextField, withFormatter: currencyFormatter)
+    }
+    
+    func validate(textField: UITextField, withFormatter formatter: NumberFormatter) {
+        if var text = textField.text {
+            text = text.replacingOccurrences(of: formatter.locale.groupingSeparator ?? "", with: "")
+            text = text.replacingOccurrences(of: formatter.locale.decimalSeparator ?? "", with: ".")
+            if let amount = Double(text) {
+                textField.text = formatter.string(from: NSNumber(value: amount))
+                return
+            }
+        }
+        textField.text = formatter.string(from: 0)
+    }
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doneButtonAction))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
 }
 

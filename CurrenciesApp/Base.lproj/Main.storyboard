@@ -72,7 +72,7 @@
             </objects>
             <point key="canvasLocation" x="34.782608695652179" y="104.46428571428571"/>
         </scene>
-        <!--AmountVC-->
+        <!--Currency Converter-->
         <scene sceneID="fcZ-79-Q3V">
             <objects>
                 <viewController id="8F4-AS-uff" customClass="AmountVC" customModule="CurrenciesApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -120,6 +120,9 @@
                                             <constraint firstAttribute="bottom" secondItem="rC9-gP-Kya" secondAttribute="bottom" constant="10" id="f4z-hO-x9T"/>
                                             <constraint firstAttribute="bottom" secondItem="gim-F7-hI9" secondAttribute="bottom" constant="10" id="yz2-NB-rhV"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="19a-6g-A0e" appends="YES" id="svl-1k-GBI"/>
+                                        </connections>
                                     </view>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fnH-wz-8ve" userLabel="Upper Currency Text Field">
                                         <rect key="frame" x="0.0" y="55" width="331" height="40"/>
@@ -207,20 +210,23 @@
                             <constraint firstItem="8CL-fa-4at" firstAttribute="centerY" secondItem="pYC-2B-ffG" secondAttribute="centerY" id="fZS-Qz-RCt"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="7xG-ta-fPU"/>
+                    <navigationItem key="navigationItem" title="Currency Converter" id="7xG-ta-fPU"/>
+                    <connections>
+                        <outlet property="lowerTextField" destination="bvS-vk-r5W" id="VHT-uB-wKn"/>
+                        <outlet property="upperTextField" destination="fnH-wz-8ve" id="BCm-FC-o5M"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XbW-mj-tJ3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="yiT-Ko-QFL">
+                <tapGestureRecognizer id="yiT-Ko-QFL" userLabel="Lower Tap Gesture Recognizer">
                     <connections>
                         <action selector="lowerCurrencyTapped:" destination="8F4-AS-uff" id="X7y-iW-0RI"/>
                     </connections>
                 </tapGestureRecognizer>
-                <view contentMode="scaleToFill" id="1zc-bg-Mf9">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <viewLayoutGuide key="safeArea" id="pyQ-eL-HSY"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                </view>
+                <tapGestureRecognizer id="19a-6g-A0e" userLabel="Upper Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="upperCurrencyTapped:" destination="8F4-AS-uff" id="hWe-Nj-tOi"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1142.0289855072465" y="103.79464285714285"/>
         </scene>

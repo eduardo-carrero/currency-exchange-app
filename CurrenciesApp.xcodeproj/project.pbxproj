@@ -20,6 +20,7 @@
 		E145713426B04D5800B56351 /* Quote+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */; };
 		E145713726B0528B00B56351 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = E145713626B0528B00B56351 /* SwiftyJSON */; };
 		E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713826B1645000B56351 /* CurrenciesTVC.swift */; };
+		E145713C26B1CFC400B56351 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		E145713126B04D5800B56351 /* Quote+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Quote+CoreDataClass.swift"; sourceTree = "<group>"; };
 		E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Quote+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E145713826B1645000B56351 /* CurrenciesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesTVC.swift; sourceTree = "<group>"; };
+		E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Utils.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 		E14570FD26B0173C00B56351 /* CurrenciesApp */ = {
 			isa = PBXGroup;
 			children = (
+				E145713A26B1CF9000B56351 /* Extensions */,
 				E145713126B04D5800B56351 /* Quote+CoreDataClass.swift */,
 				E145713226B04D5800B56351 /* Quote+CoreDataProperties.swift */,
 				E14570FE26B0173C00B56351 /* AppDelegate.swift */,
@@ -140,6 +143,14 @@
 				E145712526B0173F00B56351 /* Info.plist */,
 			);
 			path = CurrenciesAppUITests;
+			sourceTree = "<group>";
+		};
+		E145713A26B1CF9000B56351 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E145713C26B1CFC400B56351 /* UIViewController+Utils.swift in Sources */,
 				E145713426B04D5800B56351 /* Quote+CoreDataProperties.swift in Sources */,
 				E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */,
 				E145710326B0173C00B56351 /* AmountVC.swift in Sources */,
