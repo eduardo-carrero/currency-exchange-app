@@ -21,6 +21,7 @@
 		E145713726B0528B00B56351 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = E145713626B0528B00B56351 /* SwiftyJSON */; };
 		E145713926B1645000B56351 /* CurrenciesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713826B1645000B56351 /* CurrenciesTVC.swift */; };
 		E145713C26B1CFC400B56351 /* UIViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */; };
+		E145713F26B2915800B56351 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = E145713E26B2915800B56351 /* Kanna */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E145713F26B2915800B56351 /* Kanna in Frameworks */,
 				E145713726B0528B00B56351 /* SwiftyJSON in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -171,6 +173,7 @@
 			name = CurrenciesApp;
 			packageProductDependencies = (
 				E145713626B0528B00B56351 /* SwiftyJSON */,
+				E145713E26B2915800B56351 /* Kanna */,
 			);
 			productName = CurrenciesApp;
 			productReference = E14570FB26B0173C00B56351 /* CurrenciesApp.app */;
@@ -245,6 +248,7 @@
 			mainGroup = E14570F226B0173C00B56351;
 			packageReferences = (
 				E145713526B0528B00B56351 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				E145713D26B2915800B56351 /* XCRemoteSwiftPackageReference "Kanna" */,
 			);
 			productRefGroup = E14570FC26B0173C00B56351 /* Products */;
 			projectDirPath = "";
@@ -635,6 +639,14 @@
 				minimumVersion = 5.0.1;
 			};
 		};
+		E145713D26B2915800B56351 /* XCRemoteSwiftPackageReference "Kanna" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tid-kijyun/Kanna";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.6;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -642,6 +654,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E145713526B0528B00B56351 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		E145713E26B2915800B56351 /* Kanna */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E145713D26B2915800B56351 /* XCRemoteSwiftPackageReference "Kanna" */;
+			productName = Kanna;
 		};
 /* End XCSwiftPackageProductDependency section */
 

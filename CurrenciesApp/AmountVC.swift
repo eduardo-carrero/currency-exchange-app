@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import SwiftyJSON
+import Kanna
 
 class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
     
@@ -50,6 +51,7 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
         }
         
         performSelector(inBackground: #selector(fetchQuotes), with: nil)
+        performSelector(inBackground: #selector(fetchDescriptions), with: nil)
         
         loadSavedData()
     }
@@ -118,6 +120,27 @@ class AmountVC: UIViewController, NSFetchedResultsControllerDelegate {
 //            tableView.reloadData()
         } catch {
             print("Fetch failed")
+        }
+    }
+    
+        
+    @objc func fetchDescriptions() {
+        guard let url = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt") else {
+            fatalError("\(#function); could not create url.")
+        }
+        
+        if let html = try? String(contentsOf: url) {
+            if let doc = try? HTML(html: html, encoding: .utf8) {
+                for tr in doc.css("tr") {
+                    let tds = tr.css("td")
+                    if tds.count == 2 {
+                        let key = tds.first?.text ?? ""
+                        let value = tds[1].text ?? ""
+                        print("key: \(key)")
+                        print("value: \(value)")
+                    }
+                }
+            }
         }
     }
     
