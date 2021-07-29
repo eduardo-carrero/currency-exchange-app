@@ -44,6 +44,12 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
         cell?.textLabel?.text = quote.name
         cell?.detailTextLabel?.text = quote.currencyDescription
         
+        var image = UIImage(named: quote.name.lowercased())
+        if image == nil {
+            image = UIImage(named: "ic-no-image")
+        }
+        cell?.imageView?.image = image
+        
         return cell!
     }
     
