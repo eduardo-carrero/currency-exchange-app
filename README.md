@@ -1,6 +1,6 @@
 # currency-exchange-app
 
-This application uses the currencylayer API (https://currencylayer.com/) to offer the possibility to the user to do convert different amounts from one currency to another.
+This application uses the currencylayer API (https://currencylayer.com/) to offer the possibility to the user to convert different amounts from one currency to another.
 
 To use it you need to have internet at list once to download the currency related data, at the start of the app or by pressing initial screen right bar button.
 
