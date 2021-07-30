@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CurrencyFieldView" customModule="CurrenciesApp" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="1fA-ny-ZKq"/>
+                <outlet property="descriptionLabel" destination="lOq-2i-1JT" id="nkK-V8-3ng"/>
+                <outlet property="imageView" destination="OY0-oH-mfu" id="1vz-pR-TXg"/>
+                <outlet property="nameLabel" destination="NDE-AA-mDa" id="Rs0-na-DNO"/>
+                <outlet property="textField" destination="JBK-4S-H5z" id="9eZ-p3-GaJ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tg-0h-2VE" userLabel="Container">
+                    <rect key="frame" x="0.0" y="405.5" width="414" height="95"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="16N-5s-qtc" userLabel="Currency View">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NDE-AA-mDa" userLabel="Currency Name Label">
+                                    <rect key="frame" x="329" y="10" width="45" height="20"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="45" id="Zja-gL-x1U"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOq-2i-1JT" userLabel="Currency Description Label">
+                                    <rect key="frame" x="50" y="10" width="269" height="20"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="8cR-Pl-Rjq" userLabel="Currency Chevron">
+                                    <rect key="frame" x="384" y="15" width="20" height="10.5"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="8cR-Pl-Rjq" secondAttribute="height" id="1ro-5c-aIa"/>
+                                    </constraints>
+                                </imageView>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OY0-oH-mfu" userLabel="Currency Image View">
+                                    <rect key="frame" x="10" y="10" width="30" height="20"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="OY0-oH-mfu" secondAttribute="height" multiplier="3:2" id="LlD-oz-ESE"/>
+                                    </constraints>
+                                </imageView>
+                            </subviews>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="8cR-Pl-Rjq" secondAttribute="trailing" constant="10" id="7EJ-Sz-PJm"/>
+                                <constraint firstItem="OY0-oH-mfu" firstAttribute="top" secondItem="16N-5s-qtc" secondAttribute="top" constant="10" id="7dc-2q-BHf"/>
+                                <constraint firstAttribute="bottom" secondItem="NDE-AA-mDa" secondAttribute="bottom" constant="10" id="8B6-iJ-bXk"/>
+                                <constraint firstItem="NDE-AA-mDa" firstAttribute="top" secondItem="16N-5s-qtc" secondAttribute="top" constant="10" id="DQP-mA-4fb"/>
+                                <constraint firstAttribute="bottom" secondItem="8cR-Pl-Rjq" secondAttribute="bottom" constant="10" id="DWY-Or-aqR"/>
+                                <constraint firstItem="8cR-Pl-Rjq" firstAttribute="top" secondItem="16N-5s-qtc" secondAttribute="top" constant="10" id="Gue-tP-6x3"/>
+                                <constraint firstAttribute="bottom" secondItem="OY0-oH-mfu" secondAttribute="bottom" constant="10" id="RER-XE-Np6"/>
+                                <constraint firstItem="NDE-AA-mDa" firstAttribute="leading" secondItem="lOq-2i-1JT" secondAttribute="trailing" constant="10" id="SdY-Hn-mVW"/>
+                                <constraint firstAttribute="bottom" secondItem="lOq-2i-1JT" secondAttribute="bottom" constant="10" id="dOc-6O-MmD"/>
+                                <constraint firstItem="OY0-oH-mfu" firstAttribute="leading" secondItem="16N-5s-qtc" secondAttribute="leading" constant="10" id="gj5-Gg-4UI"/>
+                                <constraint firstItem="8cR-Pl-Rjq" firstAttribute="leading" secondItem="NDE-AA-mDa" secondAttribute="trailing" constant="10" id="gnS-V9-Skn"/>
+                                <constraint firstItem="lOq-2i-1JT" firstAttribute="leading" secondItem="OY0-oH-mfu" secondAttribute="trailing" constant="10" id="jwT-FU-ZIK"/>
+                                <constraint firstItem="lOq-2i-1JT" firstAttribute="top" secondItem="16N-5s-qtc" secondAttribute="top" constant="10" id="lbi-FJ-2dN"/>
+                                <constraint firstItem="NDE-AA-mDa" firstAttribute="leading" secondItem="lOq-2i-1JT" secondAttribute="trailing" constant="10" id="mEt-LL-Yfr"/>
+                                <constraint firstAttribute="height" constant="40" id="vVo-r5-NeI"/>
+                            </constraints>
+                        </view>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JBK-4S-H5z" userLabel="Currency Text Field">
+                            <rect key="frame" x="0.0" y="55" width="414" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="PtZ-Me-57Z"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="JBK-4S-H5z" firstAttribute="centerX" secondItem="9tg-0h-2VE" secondAttribute="centerX" id="2eQ-rf-3EA"/>
+                        <constraint firstItem="16N-5s-qtc" firstAttribute="width" secondItem="9tg-0h-2VE" secondAttribute="width" id="2lp-uL-eT6"/>
+                        <constraint firstAttribute="bottom" secondItem="JBK-4S-H5z" secondAttribute="bottom" id="EfW-HI-Sbz"/>
+                        <constraint firstItem="JBK-4S-H5z" firstAttribute="top" secondItem="16N-5s-qtc" secondAttribute="bottom" constant="15" id="HBQ-5L-l0D"/>
+                        <constraint firstItem="JBK-4S-H5z" firstAttribute="width" secondItem="9tg-0h-2VE" secondAttribute="width" id="L0D-S2-cug"/>
+                        <constraint firstItem="16N-5s-qtc" firstAttribute="centerX" secondItem="9tg-0h-2VE" secondAttribute="centerX" id="rAk-oB-WGe"/>
+                        <constraint firstItem="16N-5s-qtc" firstAttribute="top" secondItem="9tg-0h-2VE" secondAttribute="top" id="wSq-5G-Oq9"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="9tg-0h-2VE" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="73g-mM-xmt"/>
+                <constraint firstItem="9tg-0h-2VE" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="EeD-zW-i3d"/>
+                <constraint firstItem="9tg-0h-2VE" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" id="h77-lK-oWe"/>
+            </constraints>
+            <point key="canvasLocation" x="83" y="75"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron.down" catalog="system" width="128" height="72"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
