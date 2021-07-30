@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 import SwiftyJSON
 import Kanna
+import JGProgressHUD
 
 enum AmountField {
     case upper
@@ -41,6 +42,7 @@ class AmountVC: UIViewController {
     var fetchedResultsController: NSFetchedResultsController<Quote>!
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
+    private var hud: JGProgressHUD?
     
     var selectCurrencyAction: ((AmountField) -> Void)?
 
@@ -84,9 +86,28 @@ class AmountVC: UIViewController {
         changeCurrency(inField: .upper, toQuote: getUSDQuote())
         changeCurrency(inField: .lower, toQuote: getUSDQuote())
         
-        performSelector(inBackground: #selector(fetchCurrencies), with: nil)
+        fetchCurrencies()
         
 //        loadSavedData()
+    }
+    
+    func startProgressHUD() {
+        if hud != nil {
+            hud?.dismiss()
+        }
+        hud = JGProgressHUD(style: .dark)
+        hud?.vibrancyEnabled = true
+        hud?.indicatorView = JGProgressHUDIndeterminateIndicatorView()
+        hud?.textLabel.text = "Fetching data..."
+        hud?.detailTextLabel.text = "detalil"
+        hud?.show(in: self.view)
+    }
+    
+    func finishProgressHUD(success: Bool) {
+        hud?.textLabel.text = success ? "Success" : "Error"
+        hud?.detailTextLabel.text = nil
+        hud?.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud?.dismiss(afterDelay: 0.5)
     }
     
     func convertAmount(amount: Double, fromQuote: Quote, toQuote: Quote) {
@@ -110,18 +131,6 @@ class AmountVC: UIViewController {
             lowerImageView.image = UIImage(named: newQuote.name.lowercased())
             lowerNameLabel.text = newQuote.name
             lowerDescriptionLabel.text = newQuote.currencyDescription
-        }
-    }
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-        if let currenciesTvc = segue.destination as? CurrenciesTVC {
-            currenciesTvc.fetchedResultsController = fetchedResultsController
-            // TODO: title, anything else
         }
     }
     
@@ -160,69 +169,76 @@ class AmountVC: UIViewController {
     }
     
     @objc func fetchCurrencies() {
-        guard let descUrl = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt"),
-              let quotesUrl = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
-            fatalError("\(#function); could not create url.")
-        }
-        defaultSession.get(descUrl, quotesUrl) { descResult, quotesResult in
-            
-            var errorMsg = ""
-            if case let .error(error, _, _) = descResult {
-                errorMsg = errorMsg + "Error fetching descriptions: \(error.localizedDescription)"
-            }
-            if case let .error(error, _, _) = quotesResult {
-                errorMsg = errorMsg.isEmpty ? errorMsg : errorMsg + "\n\n"
-                errorMsg = errorMsg + "Error fetching quotes: \(error.localizedDescription)"
-            }
-            guard errorMsg.isEmpty else {
-                self.showError(errorMsg: errorMsg)
-                return
-            }
-            guard case let (descHtml?, quotesStr?) = (descResult.string, quotesResult.string) else {
-                self.showError(errorMsg: "Error getting response")
-                return
-            }
-            guard let doc = try? HTML(html: descHtml, encoding: .utf8) else {
-                self.showError(errorMsg: "Error parsing descriptions response.")
-                return
-            }
-            var descriptionsDict: [String: String] = [:]
-            for tr in doc.css("tr") {
-                let tds = tr.css("td")
-                if tds.count == 2,
-                   let key = tds.first?.text {
-                    descriptionsDict[key] = tds[1].text ?? ""
+        DispatchQueue.main.async {
+            self.startProgressHUD()
+            DispatchQueue.global().async {
+                guard let descUrl = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt"),
+                      let quotesUrl = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
+                    fatalError("\(#function); could not create url.")
                 }
-            }
-            print("descriptionsDict: \(descriptionsDict)")
-            
-            let json = JSON(parseJSON: quotesStr)
-            let jsonQuoteDict = json["quotes"].dictionaryValue
-            guard json["success"].boolValue else {
-                self.showError(errorMsg: "Got error response from server fetching quotes.")
-                return
-            }
+                self.defaultSession.get(descUrl, quotesUrl) { descResult, quotesResult in
+                    
+                    var errorMsg = ""
+                    if case let .error(error, _, _) = descResult {
+                        errorMsg = errorMsg + "Error fetching descriptions: \(error.localizedDescription)"
+                    }
+                    if case let .error(error, _, _) = quotesResult {
+                        errorMsg = errorMsg.isEmpty ? errorMsg : errorMsg + "\n\n"
+                        errorMsg = errorMsg + "Error fetching quotes: \(error.localizedDescription)"
+                    }
+                    guard errorMsg.isEmpty else {
+                        self.finishDataFetchWithError(errorMsg: errorMsg)
+                        return
+                    }
+                    guard case let (descHtml?, quotesStr?) = (descResult.string, quotesResult.string) else {
+                        self.finishDataFetchWithError(errorMsg: "Error getting response")
+                        return
+                    }
+                    guard let doc = try? HTML(html: descHtml, encoding: .utf8) else {
+                        self.finishDataFetchWithError(errorMsg: "Error parsing descriptions response.")
+                        return
+                    }
+                    var descriptionsDict: [String: String] = [:]
+                    for tr in doc.css("tr") {
+                        let tds = tr.css("td")
+                        if tds.count == 2,
+                           let key = tds.first?.text {
+                            descriptionsDict[key] = tds[1].text ?? ""
+                        }
+                    }
+                    print("descriptionsDict: \(descriptionsDict)")
+                    
+                    let json = JSON(parseJSON: quotesStr)
+                    let jsonQuoteDict = json["quotes"].dictionaryValue
+                    guard json["success"].boolValue else {
+                        self.finishDataFetchWithError(errorMsg: "Got error response from server fetching quotes.")
+                        return
+                    }
 
-            print("Received \(jsonQuoteDict.count) new quotes.")
+                    print("Received \(jsonQuoteDict.count) new quotes.")
 
-            DispatchQueue.main.async { [unowned self] in
-                for (key, value) in jsonQuoteDict {
-                    let quote = Quote(context: self.container.viewContext)
-                    let name = String(key.suffix(3))
-                    let date = Date(timeIntervalSince1970: TimeInterval(json["timestamp"].doubleValue))
-                    quote.configure(withName: name,
-                                    usdValue: value.doubleValue,
-                                    description: descriptionsDict[name] ?? "",
-                                    date: date)
+                    DispatchQueue.main.async { [unowned self] in
+                        for (key, value) in jsonQuoteDict {
+                            let quote = Quote(context: self.container.viewContext)
+                            let name = String(key.suffix(3))
+                            let date = Date(timeIntervalSince1970: TimeInterval(json["timestamp"].doubleValue))
+                            quote.configure(withName: name,
+                                            usdValue: value.doubleValue,
+                                            description: descriptionsDict[name] ?? "",
+                                            date: date)
+                        }
+                        self.saveContext()
+                        self.finishProgressHUD(success: true)
+                    }
                 }
-                self.saveContext()
             }
         }
     }
     
-    func showError(errorMsg: String) {
+    func finishDataFetchWithError(errorMsg: String) {
         print(errorMsg)
         DispatchQueue.main.async {
+            self.finishProgressHUD(success: false)
             self.showOKAlert(title: "Error", message: errorMsg)
         }
     }

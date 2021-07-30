@@ -26,6 +26,7 @@
 		E145714C26B3423A00B56351 /* CurrencyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E145714A26B3423A00B56351 /* CurrencyCell.xib */; };
 		E145714E26B3587200B56351 /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714D26B3587200B56351 /* String+Utils.swift */; };
 		E145715026B37D7900B56351 /* URLSession+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714F26B37D7900B56351 /* URLSession+Utils.swift */; };
+		E145715326B3ACCB00B56351 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E145715226B3ACCB00B56351 /* JGProgressHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E145713F26B2915800B56351 /* Kanna in Frameworks */,
+				E145715326B3ACCB00B56351 /* JGProgressHUD in Frameworks */,
 				E145713726B0528B00B56351 /* SwiftyJSON in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -194,6 +196,7 @@
 			packageProductDependencies = (
 				E145713626B0528B00B56351 /* SwiftyJSON */,
 				E145713E26B2915800B56351 /* Kanna */,
+				E145715226B3ACCB00B56351 /* JGProgressHUD */,
 			);
 			productName = CurrenciesApp;
 			productReference = E14570FB26B0173C00B56351 /* CurrenciesApp.app */;
@@ -269,6 +272,7 @@
 			packageReferences = (
 				E145713526B0528B00B56351 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				E145713D26B2915800B56351 /* XCRemoteSwiftPackageReference "Kanna" */,
+				E145715126B3ACCB00B56351 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = E14570FC26B0173C00B56351 /* Products */;
 			projectDirPath = "";
@@ -671,6 +675,14 @@
 				minimumVersion = 5.2.6;
 			};
 		};
+		E145715126B3ACCB00B56351 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -683,6 +695,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E145713D26B2915800B56351 /* XCRemoteSwiftPackageReference "Kanna" */;
 			productName = Kanna;
+		};
+		E145715226B3ACCB00B56351 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E145715126B3ACCB00B56351 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 
