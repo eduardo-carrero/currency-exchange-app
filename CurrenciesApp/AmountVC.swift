@@ -83,8 +83,8 @@ class AmountVC: UIViewController {
 //            }
 //        }
         
-        changeCurrency(inField: .upper, toQuote: getUSDQuote())
-        changeCurrency(inField: .lower, toQuote: getUSDQuote())
+//        changeCurrency(inField: .upper, toQuote: getUSDQuote())
+//        changeCurrency(inField: .lower, toQuote: getUSDQuote())
         
         fetchCurrencies()
         
@@ -117,9 +117,11 @@ class AmountVC: UIViewController {
     func changeCurrency(inField field: AmountField, toQuote newQuote: Quote) {
         let textField = field == .upper ? upperTextField : lowerTextField
         let oldQuote = field == .upper ? upperQuote : lowerQuote
-        let multiplier = newQuote.usdValue / (oldQuote?.usdValue ?? 1.0)
+        
         var amount = textField?.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
-        amount = amount * multiplier
+        if oldQuote != nil {
+            amount = amount * oldQuote!.multiplierTo(quote: newQuote)
+        }
         textField?.text = formatter.string(from: NSNumber(value: amount))
         if field == .upper {
             upperQuote = newQuote
@@ -280,11 +282,13 @@ extension AmountVC {
         guard let firstResponderTextField = upperTextField.isFirstResponder ? upperTextField : lowerTextField,
               let conversionTextField = upperTextField.isFirstResponder ? lowerTextField : upperTextField else {
             print("Didn't find text field.")
+            view.endEditing(true)
             return
         }
         guard let firstResponderQuote = upperTextField.isFirstResponder ? upperQuote : lowerQuote,
               let conversionQuote = upperTextField.isFirstResponder ? lowerQuote : upperQuote else {
             print("Didn't find quote.")
+            view.endEditing(true)
             return
         }
         view.endEditing(true)
