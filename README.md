@@ -8,6 +8,10 @@ Once the data is downloaded, it is saved and it can be used until you uninstall 
 
 The data is downloaded again and overwritten everytime you start the app or press on the refresh button having connection.
 
+Next step would be to choose both currencies, the one to introduce the amount and the one to recive the converted amount, by clicking on them and choose a currency in the table view that appears.
+
+Both amount text fields can be used to introduce an amount, and the conversion then takes place in the other text field.
+
 To handle the local storage I have used Core Data.
 
 For parsing json responses I have used SwiftyJSON.
