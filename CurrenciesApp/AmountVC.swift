@@ -69,21 +69,22 @@ class AmountVC: UIViewController {
         super.viewDidLoad()
         
         configureKeyboard()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchCurrencies))
         
-        container = NSPersistentContainer(name: "CurrenciesApp")
-
-        container.loadPersistentStores { storeDescription, error in
-            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
-            if let error = error {
-                print("Unresolved error \(error)")
-            }
-        }
+        container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+//
+//        container.loadPersistentStores { storeDescription, error in
+//            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+//
+//            if let error = error {
+//                print("Unresolved error \(error)")
+//            }
+//        }
         
         changeCurrency(inField: .upper, toQuote: getUSDQuote())
         changeCurrency(inField: .lower, toQuote: getUSDQuote())
         
-        performSelector(inBackground: #selector(fetchDescriptions), with: nil)
+        performSelector(inBackground: #selector(fetchCurrencies), with: nil)
         
 //        loadSavedData()
     }
@@ -149,66 +150,81 @@ class AmountVC: UIViewController {
             }
         }
         let quote = Quote(context: container.viewContext)
-        quote.configure(withName: "USD", date: Date(), usdValue: 1, description: "United States Dollar")
-        saveContext()
+        quote.configure(withName: "USD",
+                        usdValue: 1,
+                        description: "United States Dollar",
+                        date: Date())
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
 
         return quote
     }
-        
-    @objc func fetchDescriptions() {
-        guard let url = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt") else {
+    
+    @objc func fetchCurrencies() {
+        guard let descUrl = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt"),
+              let quotesUrl = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
             fatalError("\(#function); could not create url.")
         }
-        
-        if let html = try? String(contentsOf: url) {
-            if let doc = try? HTML(html: html, encoding: .utf8) {
-                var descriptionsDict: [String: String] = [:]
-                for tr in doc.css("tr") {
-                    let tds = tr.css("td")
-                    if tds.count == 2,
-                       let key = tds.first?.text {
-                        descriptionsDict[key] = tds[1].text ?? ""
-                    }
+        defaultSession.get(descUrl, quotesUrl) { descResult, quotesResult in
+            
+            var errorMsg = ""
+            if case let .error(error, _, _) = descResult {
+                errorMsg = errorMsg + "Error fetching descriptions: \(error.localizedDescription)"
+            }
+            if case let .error(error, _, _) = quotesResult {
+                errorMsg = errorMsg.isEmpty ? errorMsg : errorMsg + "\n\n"
+                errorMsg = errorMsg + "Error fetching quotes: \(error.localizedDescription)"
+            }
+            guard errorMsg.isEmpty else {
+                self.showError(errorMsg: errorMsg)
+                return
+            }
+            guard case let (descHtml?, quotesStr?) = (descResult.string, quotesResult.string) else {
+                self.showError(errorMsg: "Error getting response")
+                return
+            }
+            guard let doc = try? HTML(html: descHtml, encoding: .utf8) else {
+                self.showError(errorMsg: "Error parsing descriptions response.")
+                return
+            }
+            var descriptionsDict: [String: String] = [:]
+            for tr in doc.css("tr") {
+                let tds = tr.css("td")
+                if tds.count == 2,
+                   let key = tds.first?.text {
+                    descriptionsDict[key] = tds[1].text ?? ""
                 }
-                print("descriptionsDict: \(descriptionsDict)")
-                
-                
-                
-                guard let url2 = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
-                    fatalError("\(#function); could not create url.")
+            }
+            print("descriptionsDict: \(descriptionsDict)")
+            
+            let json = JSON(parseJSON: quotesStr)
+            let jsonQuoteDict = json["quotes"].dictionaryValue
+            guard json["success"].boolValue else {
+                self.showError(errorMsg: "Got error response from server fetching quotes.")
+                return
+            }
+
+            print("Received \(jsonQuoteDict.count) new quotes.")
+
+            DispatchQueue.main.async { [unowned self] in
+                for (key, value) in jsonQuoteDict {
+                    let quote = Quote(context: self.container.viewContext)
+                    let name = String(key.suffix(3))
+                    let date = Date(timeIntervalSince1970: TimeInterval(json["timestamp"].doubleValue))
+                    quote.configure(withName: name,
+                                    usdValue: value.doubleValue,
+                                    description: descriptionsDict[name] ?? "",
+                                    date: date)
                 }
-
-                if let data = try? String(contentsOf: url2) {
-                    // give the data to SwiftyJSON to parse
-                    let json = JSON(parseJSON: data)
-
-                    // read the quotes back out
-                    let jsonQuoteDict = json["quotes"].dictionaryValue
-                    let success = json["success"].boolValue
-
-                    print("Received \(jsonQuoteDict.count) new quotes.")
-
-                    DispatchQueue.main.async { [unowned self] in
-                        for (key, value) in jsonQuoteDict {
-                            let quote = Quote(context: self.container.viewContext)
-                            let name = String(key.suffix(3))
-                            self.configure(quote: quote, usingName: name, value: value, timeStamp: json["timestamp"], description: descriptionsDict[name] ?? "")
-                        }
-
-                        self.saveContext()
-                        //                self.loadSavedData()
-                    }
-                }
-                
+                self.saveContext()
             }
         }
     }
     
-    func configure(quote: Quote, usingName name: String, value: JSON, timeStamp: JSON, description: String) {
-        quote.name = name
-        quote.usdValue = value.doubleValue
-        quote.date = Date(timeIntervalSince1970: TimeInterval(timeStamp.doubleValue))
-        quote.currencyDescription = description
+    func showError(errorMsg: String) {
+        print(errorMsg)
+        DispatchQueue.main.async {
+            self.showOKAlert(title: "Error", message: errorMsg)
+        }
     }
 }
 
@@ -245,7 +261,6 @@ extension AmountVC {
 //    }
     
     @objc func doneButtonAction() {
-//        let writtenField: AmountField = upperTextField.isFirstResponder ? .upper : .lower
         guard let firstResponderTextField = upperTextField.isFirstResponder ? upperTextField : lowerTextField,
               let conversionTextField = upperTextField.isFirstResponder ? lowerTextField : upperTextField else {
             print("Didn't find text field.")

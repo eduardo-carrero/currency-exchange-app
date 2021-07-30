@@ -25,7 +25,6 @@ class CurrencyCell: UITableViewCell {
     }
     
     func configure(quote: Quote) {
-        print("\(#function)")
         nameLabel.text = quote.name
         descriptionLabel.text = quote.currencyDescription
         var image = UIImage(named: quote.name.lowercased())

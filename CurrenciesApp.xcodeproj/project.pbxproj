@@ -25,6 +25,7 @@
 		E145714B26B3423A00B56351 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714926B3423A00B56351 /* CurrencyCell.swift */; };
 		E145714C26B3423A00B56351 /* CurrencyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E145714A26B3423A00B56351 /* CurrencyCell.xib */; };
 		E145714E26B3587200B56351 /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714D26B3587200B56351 /* String+Utils.swift */; };
+		E145715026B37D7900B56351 /* URLSession+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E145714F26B37D7900B56351 /* URLSession+Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		E145714926B3423A00B56351 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		E145714A26B3423A00B56351 /* CurrencyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyCell.xib; sourceTree = "<group>"; };
 		E145714D26B3587200B56351 /* String+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
+		E145714F26B37D7900B56351 /* URLSession+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Utils.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 			children = (
 				E145713B26B1CFC400B56351 /* UIViewController+Utils.swift */,
 				E145714D26B3587200B56351 /* String+Utils.swift */,
+				E145714F26B37D7900B56351 /* URLSession+Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				E145710326B0173C00B56351 /* AmountVC.swift in Sources */,
 				E145713326B04D5800B56351 /* Quote+CoreDataClass.swift in Sources */,
 				E14570FF26B0173C00B56351 /* AppDelegate.swift in Sources */,
+				E145715026B37D7900B56351 /* URLSession+Utils.swift in Sources */,
 				E145710926B0173C00B56351 /* CurrenciesApp.xcdatamodeld in Sources */,
 				E145714226B2A2C400B56351 /* MainCoordinator.swift in Sources */,
 			);

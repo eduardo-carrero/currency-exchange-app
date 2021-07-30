@@ -17,11 +17,11 @@ public class Quote: NSManagedObject {
         return String(first)
     }
     
-    func configure(withName name: String, date: Date, usdValue: Double, description: String) {
+    func configure(withName name: String, usdValue: Double, description: String, date: Date) {
         self.name = name
-        self.date = date
         self.usdValue = usdValue
         self.currencyDescription = description
+        self.date = date
     }
     
     func multiplierTo(quote: Quote) -> Double {
