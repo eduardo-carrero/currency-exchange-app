@@ -127,15 +127,12 @@
 		E14570FD26B0173C00B56351 /* CurrenciesApp */ = {
 			isa = PBXGroup;
 			children = (
+				E145715926B3D11000B56351 /* ViewControllers */,
 				E145714026B2A29B00B56351 /* Models */,
-				E145713A26B1CF9000B56351 /* Extensions */,
 				E145715426B3BF8900B56351 /* Views */,
+				E145713A26B1CF9000B56351 /* Extensions */,
 				E14570FE26B0173C00B56351 /* AppDelegate.swift */,
 				E145714126B2A2C400B56351 /* MainCoordinator.swift */,
-				E145710226B0173C00B56351 /* AmountVC.swift */,
-				E145713826B1645000B56351 /* CurrenciesTVC.swift */,
-				E145714926B3423A00B56351 /* CurrencyCell.swift */,
-				E145714A26B3423A00B56351 /* CurrencyCell.xib */,
 				E145710426B0173C00B56351 /* Main.storyboard */,
 				E145710A26B0173E00B56351 /* Assets.xcassets */,
 				E145710C26B0173E00B56351 /* LaunchScreen.storyboard */,
@@ -187,8 +184,19 @@
 			children = (
 				E145715726B3C25D00B56351 /* CurrencyFieldView.swift */,
 				E145715526B3BFF400B56351 /* CurrencyFieldView.xib */,
+				E145714926B3423A00B56351 /* CurrencyCell.swift */,
+				E145714A26B3423A00B56351 /* CurrencyCell.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E145715926B3D11000B56351 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E145710226B0173C00B56351 /* AmountVC.swift */,
+				E145713826B1645000B56351 /* CurrenciesTVC.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

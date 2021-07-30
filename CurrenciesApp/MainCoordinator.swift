@@ -10,7 +10,7 @@ import UIKit
 
 class MainCoordinator {
     var navigationController = UINavigationController()
-    var selectedTextField: AmountField?
+    var selectedCurrencyField: CurrencyFieldView?
     
     func start() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -24,8 +24,8 @@ class MainCoordinator {
         navigationController.pushViewController(amountVc, animated: false)
     }
     
-    func showCurrencyList(fromField field: AmountField) {
-        selectedTextField = field
+    func showCurrencyList(fromField field: CurrencyFieldView) {
+        selectedCurrencyField = field
         let currenciesTvc = CurrenciesTVC()
         currenciesTvc.currencySelectedAction = { [weak self] in
             self?.didSelectCurrency(quote: $0)
@@ -38,11 +38,11 @@ class MainCoordinator {
         guard let amountVc = navigationController.viewControllers.first as? AmountVC else {
             fatalError("Could not find Amount view controller in navigationController's first position.")
         }
-        guard let textField = selectedTextField else {
+        guard let currencyField = selectedCurrencyField else {
             fatalError("selectedTextField not found.")
         }
         
-        amountVc.changeCurrency(inField: textField, toQuote: quote)
+        amountVc.changeCurrency(inField: currencyField, toQuote: quote)
         navigationController.popViewController(animated: true)
     }
 }

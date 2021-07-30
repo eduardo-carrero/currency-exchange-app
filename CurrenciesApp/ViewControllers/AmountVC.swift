@@ -11,9 +11,10 @@ import SwiftyJSON
 import Kanna
 import JGProgressHUD
 
-enum AmountField {
-    case upper
-    case lower
+extension AmountVC: CurrencyFieldDelegate {
+    func currencyFieldSelectCurrencyTapped(currencyField: CurrencyFieldView) {
+        selectCurrencyAction?(currencyField)
+    }
 }
 
 class AmountVC: UIViewController {
@@ -44,44 +45,56 @@ class AmountVC: UIViewController {
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
     private var hud: JGProgressHUD?
     
-    var selectCurrencyAction: ((AmountField) -> Void)?
+    var selectCurrencyAction: ((CurrencyFieldView) -> Void)?
 
     var upperQuote: Quote?
     var lowerQuote: Quote?
     
-    @IBOutlet weak var upperTextField: UITextField!
-    @IBOutlet weak var lowerTextField: UITextField!
-    @IBOutlet weak var upperNameLabel: UILabel!
-    @IBOutlet weak var lowerNameLabel: UILabel!
-    @IBOutlet weak var upperDescriptionLabel: UILabel!
-    @IBOutlet weak var lowerDescriptionLabel: UILabel!
-    @IBOutlet weak var upperImageView: UIImageView!
-    @IBOutlet weak var lowerImageView: UIImageView!
+    @IBOutlet weak var upperCurrencyField: CurrencyFieldView!
+    @IBOutlet weak var lowerCurrencyField: CurrencyFieldView!
     
-    @IBAction func upperCurrencyTapped(_ sender: UITapGestureRecognizer) {
-        print("\(#function)")
-        selectCurrencyAction?(.upper)
-    }
-    @IBAction func lowerCurrencyTapped(_ sender: UITapGestureRecognizer) {
-        print("\(#function)")
-        selectCurrencyAction?(.lower)
-    }
+    lazy var upperTextField: UITextField = {
+        upperCurrencyField.textField
+    }()
+    lazy var lowerTextField: UITextField = {
+        lowerCurrencyField.textField
+    }()
+    lazy var upperNameLabel: UILabel = {
+        upperCurrencyField.nameLabel
+    }()
+    lazy var lowerNameLabel: UILabel = {
+        lowerCurrencyField.nameLabel
+    }()
+    lazy var upperDescriptionLabel: UILabel = {
+        upperCurrencyField.descriptionLabel
+    }()
+    lazy var lowerDescriptionLabel: UILabel = {
+        lowerCurrencyField.descriptionLabel
+    }()
+    lazy var upperImageView: UIImageView = {
+        upperCurrencyField.imageView
+    }()
+    lazy var lowerImageView: UIImageView = {
+        lowerCurrencyField.imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        upperCurrencyField.delegate = self
+        lowerCurrencyField.delegate = self
         configureKeyboard()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchCurrencies))
         
         container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-//
-//        container.loadPersistentStores { storeDescription, error in
-//            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-//
-//            if let error = error {
-//                print("Unresolved error \(error)")
-//            }
-//        }
+
+        container.loadPersistentStores { storeDescription, error in
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            if let error = error {
+                print("Unresolved error \(error)")
+            }
+        }
         
 //        changeCurrency(inField: .upper, toQuote: getUSDQuote())
 //        changeCurrency(inField: .lower, toQuote: getUSDQuote())
@@ -114,26 +127,16 @@ class AmountVC: UIViewController {
         //TODO
     }
     
-    func changeCurrency(inField field: AmountField, toQuote newQuote: Quote) {
-        let textField = field == .upper ? upperTextField : lowerTextField
-        let oldQuote = field == .upper ? upperQuote : lowerQuote
+    func changeCurrency(inField field: CurrencyFieldView, toQuote newQuote: Quote) {
+        let textField = field.textField!
+        let oldQuote = field.quote
         
-        var amount = textField?.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
+        var amount = textField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
         if oldQuote != nil {
             amount = amount * oldQuote!.multiplierTo(quote: newQuote)
         }
-        textField?.text = formatter.string(from: NSNumber(value: amount))
-        if field == .upper {
-            upperQuote = newQuote
-            upperImageView.image = UIImage(named: newQuote.name.lowercased())
-            upperNameLabel.text = newQuote.name
-            upperDescriptionLabel.text = newQuote.currencyDescription
-        } else {
-            lowerQuote = newQuote
-            lowerImageView.image = UIImage(named: newQuote.name.lowercased())
-            lowerNameLabel.text = newQuote.name
-            lowerDescriptionLabel.text = newQuote.currencyDescription
-        }
+        textField.text = formatter.string(from: NSNumber(value: amount))
+        field.configure(withQuote: newQuote)
     }
     
     func saveContext() {
@@ -279,24 +282,21 @@ extension AmountVC {
 //    }
     
     @objc func doneButtonAction() {
-        guard let firstResponderTextField = upperTextField.isFirstResponder ? upperTextField : lowerTextField,
-              let conversionTextField = upperTextField.isFirstResponder ? lowerTextField : upperTextField else {
-            print("Didn't find text field.")
-            view.endEditing(true)
-            return
-        }
-        guard let firstResponderQuote = upperTextField.isFirstResponder ? upperQuote : lowerQuote,
-              let conversionQuote = upperTextField.isFirstResponder ? lowerQuote : upperQuote else {
+        let firstResponderField = upperTextField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
+        let conversionField = upperTextField.isFirstResponder ? lowerCurrencyField! : upperCurrencyField!
+        
+        guard let firstResponderQuote = firstResponderField.quote,
+              let conversionQuote = conversionField.quote else {
             print("Didn't find quote.")
             view.endEditing(true)
             return
         }
         view.endEditing(true)
-        self.validate(textField: firstResponderTextField, withFormatter: formatter)
-        let amount = firstResponderTextField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
+        self.validate(textField: firstResponderField.textField, withFormatter: formatter)
+        let amount = firstResponderField.textField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
         let newAmount = amount * firstResponderQuote.multiplierTo(quote: conversionQuote)
         
-        conversionTextField.text = formatter.string(from: NSNumber(value: newAmount))
+        conversionField.textField.text = formatter.string(from: NSNumber(value: newAmount))
     }
     
     func validate(textField: UITextField, withFormatter formatter: NumberFormatter) {

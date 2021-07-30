@@ -75,6 +75,9 @@
                                 <constraint firstItem="NDE-AA-mDa" firstAttribute="leading" secondItem="lOq-2i-1JT" secondAttribute="trailing" constant="10" id="mEt-LL-Yfr"/>
                                 <constraint firstAttribute="height" constant="40" id="vVo-r5-NeI"/>
                             </constraints>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="TPn-C1-eh2" appends="YES" id="uab-KP-bg7"/>
+                            </connections>
                         </view>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JBK-4S-H5z" userLabel="Currency Text Field">
                             <rect key="frame" x="0.0" y="55" width="414" height="40"/>
@@ -106,6 +109,11 @@
             </constraints>
             <point key="canvasLocation" x="83" y="75"/>
         </view>
+        <tapGestureRecognizer id="TPn-C1-eh2">
+            <connections>
+                <action selector="didTapCurrencyView:" destination="-1" id="yFy-zk-mDM"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="chevron.down" catalog="system" width="128" height="72"/>
