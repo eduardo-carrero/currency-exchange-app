@@ -11,12 +11,6 @@ import SwiftyJSON
 import Kanna
 import JGProgressHUD
 
-extension AmountVC: CurrencyFieldDelegate {
-    func currencyFieldSelectCurrencyTapped(currencyField: CurrencyFieldView) {
-        selectCurrencyAction?(currencyField)
-    }
-}
-
 class AmountVC: UIViewController {
     
     // essential URL structure is built using constants
@@ -26,7 +20,7 @@ class AmountVC: UIViewController {
     private static let ENDPOINT = "live"
     private static let DESCRIPTIONS_URL = "https://currencylayer.com/site_downloads/cl-currencies-table.txt"
     
-//    var usdAmount: Double = 0.0
+    var usdAmount: Double = 0.0
     lazy var formatter: NumberFormatter = {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
@@ -40,43 +34,14 @@ class AmountVC: UIViewController {
     
     var container: NSPersistentContainer!
     var quotePredicate: NSPredicate?
-    var fetchedResultsController: NSFetchedResultsController<Quote>!
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
     private var hud: JGProgressHUD?
     
     var selectCurrencyAction: ((CurrencyFieldView) -> Void)?
-
-    var upperQuote: Quote?
-    var lowerQuote: Quote?
     
     @IBOutlet weak var upperCurrencyField: CurrencyFieldView!
     @IBOutlet weak var lowerCurrencyField: CurrencyFieldView!
-    
-    lazy var upperTextField: UITextField = {
-        upperCurrencyField.textField
-    }()
-    lazy var lowerTextField: UITextField = {
-        lowerCurrencyField.textField
-    }()
-    lazy var upperNameLabel: UILabel = {
-        upperCurrencyField.nameLabel
-    }()
-    lazy var lowerNameLabel: UILabel = {
-        lowerCurrencyField.nameLabel
-    }()
-    lazy var upperDescriptionLabel: UILabel = {
-        upperCurrencyField.descriptionLabel
-    }()
-    lazy var lowerDescriptionLabel: UILabel = {
-        lowerCurrencyField.descriptionLabel
-    }()
-    lazy var upperImageView: UIImageView = {
-        upperCurrencyField.imageView
-    }()
-    lazy var lowerImageView: UIImageView = {
-        lowerCurrencyField.imageView
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,47 +61,14 @@ class AmountVC: UIViewController {
             }
         }
         
-//        changeCurrency(inField: .upper, toQuote: getUSDQuote())
-//        changeCurrency(inField: .lower, toQuote: getUSDQuote())
-        
         fetchCurrencies()
         
 //        loadSavedData()
     }
     
-    func startProgressHUD() {
-        if hud != nil {
-            hud?.dismiss()
-        }
-        hud = JGProgressHUD(style: .dark)
-        hud?.vibrancyEnabled = true
-        hud?.indicatorView = JGProgressHUDIndeterminateIndicatorView()
-        hud?.textLabel.text = "Fetching data..."
-        hud?.detailTextLabel.text = "detalil"
-        hud?.show(in: self.view)
-    }
-    
-    func finishProgressHUD(success: Bool) {
-        hud?.textLabel.text = success ? "Success" : "Error"
-        hud?.detailTextLabel.text = nil
-        hud?.indicatorView = JGProgressHUDSuccessIndicatorView()
-        hud?.dismiss(afterDelay: 0.5)
-    }
-    
-    func convertAmount(amount: Double, fromQuote: Quote, toQuote: Quote) {
-        //TODO
-    }
-    
     func changeCurrency(inField field: CurrencyFieldView, toQuote newQuote: Quote) {
-        let textField = field.textField!
-        let oldQuote = field.quote
-        
-        var amount = textField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
-        if oldQuote != nil {
-            amount = amount * oldQuote!.multiplierTo(quote: newQuote)
-        }
-        textField.text = formatter.string(from: NSNumber(value: amount))
         field.configure(withQuote: newQuote)
+        fillTextFieldWithUsdAmount(field: field, usdAmount: usdAmount)
     }
     
     func saveContext() {
@@ -147,30 +79,6 @@ class AmountVC: UIViewController {
                 print("An error occurred while saving: \(error)")
             }
         }
-    }
-    
-    func getUSDQuote() -> Quote {
-
-        let predicate = Quote.createFetchRequest()
-//        let sort = NSSortDescriptor(key: "date", ascending: false)
-//        newest.sortDescriptors = [sort]
-        quotePredicate = NSPredicate(format: "name == 'USD'")
-        predicate.predicate = quotePredicate
-        predicate.fetchLimit = 1
-
-        if let quotes = try? container.viewContext.fetch(predicate) {
-            if quotes.count > 0 {
-                return quotes[0]
-            }
-        }
-        let quote = Quote(context: container.viewContext)
-        quote.configure(withName: "USD",
-                        usdValue: 1,
-                        description: "United States Dollar",
-                        date: Date())
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-
-        return quote
     }
     
     @objc func fetchCurrencies() {
@@ -251,15 +159,15 @@ class AmountVC: UIViewController {
 
 extension AmountVC {
     func configureKeyboard() {
-        upperTextField.keyboardType = .numbersAndPunctuation
-        lowerTextField.keyboardType = .numbersAndPunctuation
+        upperCurrencyField.textField.keyboardType = .numbersAndPunctuation
+        lowerCurrencyField.textField.keyboardType = .numbersAndPunctuation
         addDoneButtonOnKeyboard()
         hideKeyboardWhenTappedAround()
     }
     
     func addDoneButtonOnKeyboard() {
-        upperTextField.inputAccessoryView = createDoneToolbar()
-        lowerTextField.inputAccessoryView = createDoneToolbar()
+        upperCurrencyField.textField.inputAccessoryView = createDoneToolbar()
+        lowerCurrencyField.textField.inputAccessoryView = createDoneToolbar()
     }
     
     func createDoneToolbar() -> UIToolbar {
@@ -275,36 +183,34 @@ extension AmountVC {
         return doneToolbar
     }
     
-//    @objc func doneButtonAction() {
-//        view.endEditing(true)
-//        self.validate(textField: upperTextField, withFormatter: formatter)
-//        self.validate(textField: lowerTextField, withFormatter: formatter)
-//    }
-    
     @objc func doneButtonAction() {
-        let firstResponderField = upperTextField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
-        let conversionField = upperTextField.isFirstResponder ? lowerCurrencyField! : upperCurrencyField!
-        
-        guard let firstResponderQuote = firstResponderField.quote,
-              let conversionQuote = conversionField.quote else {
-            print("Didn't find quote.")
-            view.endEditing(true)
-            return
-        }
+        let firstResponderField = upperCurrencyField.textField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
         view.endEditing(true)
-        self.validate(textField: firstResponderField.textField, withFormatter: formatter)
-        let amount = firstResponderField.textField.text?.doubleWithFormatter(formatter: formatter) ?? 0.0
-        let newAmount = amount * firstResponderQuote.multiplierTo(quote: conversionQuote)
-        
-        conversionField.textField.text = formatter.string(from: NSNumber(value: newAmount))
+        usdAmount = usdAmountFrom(field: firstResponderField, withFormatter: formatter)
+        fillTextFieldsWithUsdAmount(usdAmount: usdAmount)
     }
     
-    func validate(textField: UITextField, withFormatter formatter: NumberFormatter) {
-        if let amount = textField.text?.doubleWithFormatter(formatter: formatter) {
-            textField.text = formatter.string(from: NSNumber(value: amount))
+    func usdAmountFrom(field: CurrencyFieldView, withFormatter formatter: NumberFormatter) -> Double {
+        if let amount = field.textField.text?.doubleWithFormatter(formatter: formatter),
+           let usdValue = field.quote?.usdValue {
+            return amount / usdValue
+        }
+        return 0.0
+    }
+    
+    func fillTextFieldsWithUsdAmount(usdAmount: Double) {
+        fillTextFieldWithUsdAmount(field: upperCurrencyField, usdAmount: usdAmount)
+        fillTextFieldWithUsdAmount(field: lowerCurrencyField, usdAmount: usdAmount)
+    }
+    
+    func fillTextFieldWithUsdAmount(field: CurrencyFieldView, usdAmount: Double) {
+        guard let quote = field.quote else {
+            print("Didn't find quote in currency field.")
+            field.textField.text = formatter.string(from: 0)
             return
         }
-        textField.text = formatter.string(from: 0)
+        let convertedAmount = quote.usdValue * usdAmount
+        field.textField.text = formatter.string(from: NSNumber(value: convertedAmount))
     }
     
     func hideKeyboardWhenTappedAround() {
@@ -314,3 +220,29 @@ extension AmountVC {
     }
 }
 
+extension AmountVC: CurrencyFieldDelegate {
+    func currencyFieldSelectCurrencyTapped(currencyField: CurrencyFieldView) {
+        selectCurrencyAction?(currencyField)
+    }
+}
+
+extension AmountVC {
+    func startProgressHUD() {
+        if hud != nil {
+            hud?.dismiss()
+        }
+        hud = JGProgressHUD(style: .dark)
+        hud?.vibrancyEnabled = true
+        hud?.indicatorView = JGProgressHUDIndeterminateIndicatorView()
+        hud?.textLabel.text = "Fetching data..."
+        hud?.detailTextLabel.text = "detalil"
+        hud?.show(in: self.view)
+    }
+
+    func finishProgressHUD(success: Bool) {
+        hud?.textLabel.text = success ? "Success" : "Error"
+        hud?.detailTextLabel.text = nil
+        hud?.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud?.dismiss(afterDelay: 0.5)
+    }
+}
