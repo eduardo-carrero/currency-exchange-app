@@ -62,8 +62,6 @@ class AmountVC: UIViewController {
         }
         
         fetchCurrencies()
-        
-//        loadSavedData()
     }
     
     func changeCurrency(inField field: CurrencyFieldView, toQuote newQuote: Quote) {
@@ -71,16 +69,38 @@ class AmountVC: UIViewController {
         fillTextFieldWithUsdAmount(field: field, usdAmount: usdAmount)
     }
     
-    func saveContext() {
-        if container.viewContext.hasChanges {
-            do {
-                try container.viewContext.save()
-            } catch {
-                print("An error occurred while saving: \(error)")
-            }
-        }
+    @objc func doneButtonAction() {
+        let firstResponderField = upperCurrencyField.textField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
+        view.endEditing(true)
+        usdAmount = usdAmountFrom(field: firstResponderField, withFormatter: formatter)
+        fillTextFieldsWithUsdAmount(usdAmount: usdAmount)
     }
     
+    func usdAmountFrom(field: CurrencyFieldView, withFormatter formatter: NumberFormatter) -> Double {
+        if let amount = field.textField.text?.doubleWithFormatter(formatter: formatter),
+           let usdValue = field.quote?.usdValue {
+            return amount / usdValue
+        }
+        return 0.0
+    }
+    
+    func fillTextFieldsWithUsdAmount(usdAmount: Double) {
+        fillTextFieldWithUsdAmount(field: upperCurrencyField, usdAmount: usdAmount)
+        fillTextFieldWithUsdAmount(field: lowerCurrencyField, usdAmount: usdAmount)
+    }
+    
+    func fillTextFieldWithUsdAmount(field: CurrencyFieldView, usdAmount: Double) {
+        guard let quote = field.quote else {
+            print("Didn't find quote in currency field.")
+            field.textField.text = formatter.string(from: 0)
+            return
+        }
+        let convertedAmount = quote.usdValue * usdAmount
+        field.textField.text = formatter.string(from: NSNumber(value: convertedAmount))
+    }
+}
+
+extension AmountVC {
     @objc func fetchCurrencies() {
         DispatchQueue.main.async {
             self.startProgressHUD()
@@ -140,7 +160,7 @@ class AmountVC: UIViewController {
                                             description: descriptionsDict[name] ?? "",
                                             date: date)
                         }
-                        self.saveContext()
+                        (UIApplication.shared.delegate as! AppDelegate).saveContext()
                         self.finishProgressHUD(success: true)
                     }
                 }
@@ -181,36 +201,6 @@ extension AmountVC {
         doneToolbar.items = items
         doneToolbar.sizeToFit()
         return doneToolbar
-    }
-    
-    @objc func doneButtonAction() {
-        let firstResponderField = upperCurrencyField.textField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
-        view.endEditing(true)
-        usdAmount = usdAmountFrom(field: firstResponderField, withFormatter: formatter)
-        fillTextFieldsWithUsdAmount(usdAmount: usdAmount)
-    }
-    
-    func usdAmountFrom(field: CurrencyFieldView, withFormatter formatter: NumberFormatter) -> Double {
-        if let amount = field.textField.text?.doubleWithFormatter(formatter: formatter),
-           let usdValue = field.quote?.usdValue {
-            return amount / usdValue
-        }
-        return 0.0
-    }
-    
-    func fillTextFieldsWithUsdAmount(usdAmount: Double) {
-        fillTextFieldWithUsdAmount(field: upperCurrencyField, usdAmount: usdAmount)
-        fillTextFieldWithUsdAmount(field: lowerCurrencyField, usdAmount: usdAmount)
-    }
-    
-    func fillTextFieldWithUsdAmount(field: CurrencyFieldView, usdAmount: Double) {
-        guard let quote = field.quote else {
-            print("Didn't find quote in currency field.")
-            field.textField.text = formatter.string(from: 0)
-            return
-        }
-        let convertedAmount = quote.usdValue * usdAmount
-        field.textField.text = formatter.string(from: NSNumber(value: convertedAmount))
     }
     
     func hideKeyboardWhenTappedAround() {

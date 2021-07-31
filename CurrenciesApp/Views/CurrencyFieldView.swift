@@ -43,8 +43,6 @@ class CurrencyFieldView: UIView {
         nib.instantiate(withOwner: self, options: nil)
         contentView.frame = bounds
         addSubview(contentView)
-            
-            // custom initialization logic
     }
     
     func configure(withQuote quote: Quote) {
@@ -53,14 +51,5 @@ class CurrencyFieldView: UIView {
         descriptionLabel.text = quote.currencyDescription
         imageView.image = UIImage(named: quote.name.lowercased())
     }
-    
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
 
 }

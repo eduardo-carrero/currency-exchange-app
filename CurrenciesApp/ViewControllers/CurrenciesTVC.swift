@@ -72,28 +72,13 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
             fetchedResultsController.delegate = self
         }
         
-//        quotePredicate = NSPredicate(format: "name BEGINSWITH 'E'")
-//        quotePredicate = NSPredicate(format: "name == 'EUR'")
         fetchedResultsController.fetchRequest.predicate = quotePredicate
 
         do {
             try fetchedResultsController.performFetch()
-//            tableView.reloadData()
+            tableView.reloadData()
         } catch {
             print("Fetch failed")
         }
     }
-    
-    //    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-    ////        switch type {
-    ////        case .delete:
-    ////            tableView.deleteRows(at: [indexPath!], with: .automatic)
-    ////
-    ////            //TODO: see if I should do more cases here.
-    ////
-    ////        default:
-    ////            break
-    ////        }
-    //    }
-
 }
