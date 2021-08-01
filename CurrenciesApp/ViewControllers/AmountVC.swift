@@ -46,8 +46,13 @@ class AmountVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        upperCurrencyField.delegate = self
-        lowerCurrencyField.delegate = self
+        upperCurrencyField.selectCurrencyAction = { [weak self] in
+            self?.selectCurrencyAction?($0)
+        }
+        lowerCurrencyField.selectCurrencyAction = { [weak self] in
+            self?.selectCurrencyAction?($0)
+        }
+        
         configureKeyboard()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchCurrencies))
         
@@ -207,12 +212,6 @@ extension AmountVC {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doneButtonAction))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-    }
-}
-
-extension AmountVC: CurrencyFieldDelegate {
-    func currencyFieldSelectCurrencyTapped(currencyField: CurrencyFieldView) {
-        selectCurrencyAction?(currencyField)
     }
 }
 

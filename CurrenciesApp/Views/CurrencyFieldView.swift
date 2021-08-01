@@ -7,13 +7,8 @@
 
 import UIKit
 
-protocol CurrencyFieldDelegate: NSObject {
-    func currencyFieldSelectCurrencyTapped(currencyField: CurrencyFieldView)
-}
-
 class CurrencyFieldView: UIView {
     
-    weak var delegate: CurrencyFieldDelegate?
     private(set) var quote: Quote?
     
     @IBOutlet var contentView: UIView!
@@ -21,10 +16,12 @@ class CurrencyFieldView: UIView {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var textField: UITextField!
+    var selectCurrencyAction: ((CurrencyFieldView) -> Void)?
+    
     
     @IBAction func didTapCurrencyView(_ sender: Any) {
         print("\(#function)")
-        delegate?.currencyFieldSelectCurrencyTapped(currencyField: self)
+        selectCurrencyAction?(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
