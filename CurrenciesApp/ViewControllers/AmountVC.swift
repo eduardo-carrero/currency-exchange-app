@@ -47,10 +47,12 @@ class AmountVC: UIViewController {
         
         upperCurrencyField.selectCurrencyAction = { [weak self] field in
             guard let self = self else { return }
+            self.doneButtonAction()
             self.selectCurrencyAction?(self, field)
         }
         lowerCurrencyField.selectCurrencyAction = { [weak self] field in
             guard let self = self else { return }
+            self.doneButtonAction()
             self.selectCurrencyAction?(self, field)
         }
         
