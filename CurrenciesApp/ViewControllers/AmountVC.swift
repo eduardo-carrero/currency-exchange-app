@@ -20,8 +20,8 @@ class AmountVC: UIViewController {
     private static let ENDPOINT = "live"
     private static let DESCRIPTIONS_URL = "https://currencylayer.com/site_downloads/cl-currencies-table.txt"
     
-    var usdAmount: Double = 0.0
-    lazy var formatter: NumberFormatter = {
+    private var usdAmount: Double = 0.0
+    private lazy var formatter: NumberFormatter = {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.numberStyle = .decimal
@@ -32,13 +32,12 @@ class AmountVC: UIViewController {
         return currencyFormatter
     }()
     
-    var container: NSPersistentContainer!
-    var quotePredicate: NSPredicate?
+    private var container: NSPersistentContainer!
     
     private var defaultSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
     private var hud: JGProgressHUD?
     
-    var selectCurrencyAction: ((CurrencyFieldView) -> Void)?
+    var selectCurrencyAction: ((AmountVC, CurrencyFieldView) -> Void)?
     
     @IBOutlet weak var upperCurrencyField: CurrencyFieldView!
     @IBOutlet weak var lowerCurrencyField: CurrencyFieldView!
@@ -46,11 +45,13 @@ class AmountVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        upperCurrencyField.selectCurrencyAction = { [weak self] in
-            self?.selectCurrencyAction?($0)
+        upperCurrencyField.selectCurrencyAction = { [weak self] field in
+            guard let self = self else { return }
+            self.selectCurrencyAction?(self, field)
         }
-        lowerCurrencyField.selectCurrencyAction = { [weak self] in
-            self?.selectCurrencyAction?($0)
+        lowerCurrencyField.selectCurrencyAction = { [weak self] field in
+            guard let self = self else { return }
+            self.selectCurrencyAction?(self, field)
         }
         
         configureKeyboard()
@@ -69,19 +70,19 @@ class AmountVC: UIViewController {
         fetchCurrencies()
     }
     
-    func changeCurrency(inField field: CurrencyFieldView, toQuote newQuote: Quote) {
+    func changeCurrency(inField field: CurrencyFieldView, withQuote newQuote: Quote) {
         field.configure(withQuote: newQuote)
         fillTextFieldWithUsdAmount(field: field, usdAmount: usdAmount)
     }
     
-    @objc func doneButtonAction() {
+    @objc private func doneButtonAction() {
         let firstResponderField = upperCurrencyField.textField.isFirstResponder ? upperCurrencyField! : lowerCurrencyField!
         view.endEditing(true)
         usdAmount = usdAmountFrom(field: firstResponderField, withFormatter: formatter)
         fillTextFieldsWithUsdAmount(usdAmount: usdAmount)
     }
     
-    func usdAmountFrom(field: CurrencyFieldView, withFormatter formatter: NumberFormatter) -> Double {
+    private func usdAmountFrom(field: CurrencyFieldView, withFormatter formatter: NumberFormatter) -> Double {
         if let amount = field.textField.text?.doubleWithFormatter(formatter: formatter),
            let usdValue = field.quote?.usdValue {
             return amount / usdValue
@@ -89,12 +90,12 @@ class AmountVC: UIViewController {
         return 0.0
     }
     
-    func fillTextFieldsWithUsdAmount(usdAmount: Double) {
+    private func fillTextFieldsWithUsdAmount(usdAmount: Double) {
         fillTextFieldWithUsdAmount(field: upperCurrencyField, usdAmount: usdAmount)
         fillTextFieldWithUsdAmount(field: lowerCurrencyField, usdAmount: usdAmount)
     }
     
-    func fillTextFieldWithUsdAmount(field: CurrencyFieldView, usdAmount: Double) {
+    private func fillTextFieldWithUsdAmount(field: CurrencyFieldView, usdAmount: Double) {
         guard let quote = field.quote else {
             print("Didn't find quote in currency field.")
             field.textField.text = formatter.string(from: 0)
@@ -106,11 +107,11 @@ class AmountVC: UIViewController {
 }
 
 extension AmountVC {
-    @objc func fetchCurrencies() {
+    @objc private func fetchCurrencies() {
         DispatchQueue.main.async {
             self.startProgressHUD()
             DispatchQueue.global().async {
-                guard let descUrl = URL(string: "https://currencylayer.com/site_downloads/cl-currencies-table.txt"),
+                guard let descUrl = URL(string: Self.DESCRIPTIONS_URL),
                       let quotesUrl = URL(string: "\(Self.BASE_URL)\(Self.ENDPOINT)?access_key=\(Self.ACCESS_KEY)") else {
                     fatalError("\(#function); could not create url.")
                 }
@@ -173,7 +174,7 @@ extension AmountVC {
         }
     }
     
-    func finishDataFetchWithError(errorMsg: String) {
+    private func finishDataFetchWithError(errorMsg: String) {
         print(errorMsg)
         DispatchQueue.main.async {
             self.finishProgressHUD(success: false)
@@ -183,19 +184,19 @@ extension AmountVC {
 }
 
 extension AmountVC {
-    func configureKeyboard() {
+    private func configureKeyboard() {
         upperCurrencyField.textField.keyboardType = .numbersAndPunctuation
         lowerCurrencyField.textField.keyboardType = .numbersAndPunctuation
         addDoneButtonOnKeyboard()
         hideKeyboardWhenTappedAround()
     }
     
-    func addDoneButtonOnKeyboard() {
+    private func addDoneButtonOnKeyboard() {
         upperCurrencyField.textField.inputAccessoryView = createDoneToolbar()
         lowerCurrencyField.textField.inputAccessoryView = createDoneToolbar()
     }
     
-    func createDoneToolbar() -> UIToolbar {
+    private func createDoneToolbar() -> UIToolbar {
         let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
         doneToolbar.barStyle = .default
 
@@ -208,7 +209,7 @@ extension AmountVC {
         return doneToolbar
     }
     
-    func hideKeyboardWhenTappedAround() {
+    private func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doneButtonAction))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -216,7 +217,7 @@ extension AmountVC {
 }
 
 extension AmountVC {
-    func startProgressHUD() {
+    private func startProgressHUD() {
         if hud != nil {
             hud?.dismiss()
         }
@@ -228,7 +229,7 @@ extension AmountVC {
         hud?.show(in: self.view)
     }
 
-    func finishProgressHUD(success: Bool) {
+    private func finishProgressHUD(success: Bool) {
         hud?.textLabel.text = success ? "Success" : "Error"
         hud?.detailTextLabel.text = nil
         hud?.indicatorView = JGProgressHUDSuccessIndicatorView()

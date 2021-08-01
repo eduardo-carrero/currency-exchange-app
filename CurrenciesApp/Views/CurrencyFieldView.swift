@@ -34,7 +34,7 @@ class CurrencyFieldView: UIView {
         initSubviews()
     }
     
-    func initSubviews() {
+    private func initSubviews() {
         // standard initialization logic
         let nib = UINib(nibName: "CurrencyFieldView", bundle: nil)
         nib.instantiate(withOwner: self, options: nil)

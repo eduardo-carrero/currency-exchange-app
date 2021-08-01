@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 class MainCoordinator {
-    var navigationController = UINavigationController()
-    var selectedCurrencyField: CurrencyFieldView?
+    private(set) var navigationController = UINavigationController()
+    private var selectedCurrencyField: CurrencyFieldView?
     
     func start() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -18,31 +18,23 @@ class MainCoordinator {
         guard let amountVc = storyboard.instantiateInitialViewController() as? AmountVC else {
             fatalError("Missing initial view controller in Main.storyboard.")
         }
-        amountVc.selectCurrencyAction = { [weak self] in
-            self?.showCurrencyList(fromField: $0)
+        amountVc.selectCurrencyAction = { [weak self] amountVc, field in
+            self?.showCurrencyList(fromField: field, viewController: amountVc)
         }
         navigationController.pushViewController(amountVc, animated: false)
     }
     
-    func showCurrencyList(fromField field: CurrencyFieldView) {
+    private func showCurrencyList(fromField field: CurrencyFieldView, viewController: AmountVC) {
         selectedCurrencyField = field
         let currenciesTvc = CurrenciesTVC()
         currenciesTvc.currencySelectedAction = { [weak self] in
-            self?.didSelectCurrency(quote: $0)
+            self?.didSelectCurrency(quote: $0, fromField: field, viewController: viewController)
         }
         navigationController.pushViewController(currenciesTvc, animated: true)
     }
     
-    func didSelectCurrency(quote: Quote) {
-        print("quote: \(quote)")
-        guard let amountVc = navigationController.viewControllers.first as? AmountVC else {
-            fatalError("Could not find Amount view controller in navigationController's first position.")
-        }
-        guard let currencyField = selectedCurrencyField else {
-            fatalError("selectedTextField not found.")
-        }
-        
-        amountVc.changeCurrency(inField: currencyField, toQuote: quote)
+    private func didSelectCurrency(quote: Quote, fromField field: CurrencyFieldView, viewController: AmountVC) {
+        viewController.changeCurrency(inField: field, withQuote: quote)
         navigationController.popViewController(animated: true)
     }
 }

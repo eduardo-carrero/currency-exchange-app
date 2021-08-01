@@ -10,10 +10,8 @@ import CoreData
 
 class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
     
-//    var quote: Quote!
-    var quotePredicate: NSPredicate?
-    var fetchedResultsController: NSFetchedResultsController<Quote>!
-    
+    private var quotePredicate: NSPredicate?
+    private var fetchedResultsController: NSFetchedResultsController<Quote>!
     var currencySelectedAction: ((Quote) -> Void)?
 
     override func viewDidLoad() {
@@ -60,7 +58,7 @@ class CurrenciesTVC: UITableViewController, NSFetchedResultsControllerDelegate {
         return ""
     }
     
-    func loadSavedData() {
+    private func loadSavedData() {
         if fetchedResultsController == nil {
             let request = Quote.createFetchRequest()
             let sort = NSSortDescriptor(key: "name", ascending: true)
