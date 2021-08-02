@@ -20,4 +20,4 @@ For parsing html response data I have used Kanna.
 
 To show progress to the user while fetching the data I have used JGProgressHUD.
 
-The app is very easy to use and to understand, I hope you enjoy :)
+The app is very easy to use and to understand, I hope you like it! :)
