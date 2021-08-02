@@ -41,6 +41,7 @@ class AmountVC: UIViewController {
     
     @IBOutlet weak var upperCurrencyField: CurrencyFieldView!
     @IBOutlet weak var lowerCurrencyField: CurrencyFieldView!
+    @IBOutlet weak var lastUpdateLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +71,7 @@ class AmountVC: UIViewController {
         }
         
         fetchCurrencies()
+        setLastUpdate()
     }
     
     func changeCurrency(inField field: CurrencyFieldView, withQuote newQuote: Quote) {
@@ -105,6 +107,23 @@ class AmountVC: UIViewController {
         }
         let convertedAmount = quote.usdValue * usdAmount
         field.textField.text = formatter.string(from: NSNumber(value: convertedAmount))
+    }
+    
+    func setLastUpdate() {
+        let request = Quote.createFetchRequest()
+        let sort = NSSortDescriptor(key: "name", ascending: false)
+        request.sortDescriptors = [sort]
+        request.fetchLimit = 1
+
+        do {
+            let quotes = try container.viewContext.fetch(request)
+            if quotes.count > 0 {
+                lastUpdateLabel.text = "Last currency data update on \(quotes[0].date.description)"
+            }
+            print("Got \(quotes.count) commits")
+        } catch {
+            print("Fetch failed")
+        }
     }
 }
 
@@ -169,6 +188,7 @@ extension AmountVC {
                                             date: date)
                         }
                         (UIApplication.shared.delegate as! AppDelegate).saveContext()
+                        self.setLastUpdate()
                         self.finishProgressHUD(success: true)
                     }
                 }
